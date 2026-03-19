@@ -312,7 +312,7 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
       <a href="#contact">Contact</a>
     </nav>
     <div class="nav-right">
-      <div class="nav-phone"><strong>+44 7XXX XXXXXX</strong></div>
+      <div class="nav-phone"><strong>07930 057731</strong></div>
       <button class="btn-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Free first visit</button>
       <button class="nav-hamburger" id="hamburger" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -608,38 +608,44 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
         <div class="ci-title">Direct contact details</div>
         <div class="ci-row"><span class="ci-key">Name</span><span class="ci-val">James Gilbert</span></div>
         <div class="ci-row"><span class="ci-key">Role</span><span class="ci-val">Compliance Technician &amp; Founder</span></div>
-        <div class="ci-row"><span class="ci-key">Phone</span><span class="ci-val">+44 7XXX XXXXXX</span></div>
-        <div class="ci-row"><span class="ci-key">Email</span><span class="ci-val">james@heyfordcompliance.co.uk</span></div>
+        <div class="ci-row"><span class="ci-key">Phone</span><span class="ci-val">07930 057731</span></div>
+        <div class="ci-row"><span class="ci-key">Email</span><span class="ci-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="315b505c544271595448575e4355525e5c415d58505f52541f525e1f445a">[email&#160;protected]</a></span></div>
         <div class="ci-row"><span class="ci-key">Website</span><span class="ci-val">heyfordcompliance.co.uk</span></div>
         <div class="ci-row"><span class="ci-key">Location</span><span class="ci-val">Upper Heyford, Bicester, Oxfordshire</span></div>
         <div class="ci-tagline">"One Visit. Every Check. Complete Peace of Mind."</div>
       </div>
       <div class="form-wrap reveal reveal-d3">
         <div class="form-title">Quick enquiry — we reply within one working day</div>
-        <form id="contactForm" onsubmit="handleSubmit(event)">
+        <form id="contactForm" action="https://formspree.io/f/xyknovby" method="POST" onsubmit="handleSubmit(event)">
+          <!-- Formspree config -->
+          <input type="hidden" name="_subject" value="New enquiry — Heyford Compliance Co."/>
+          <input type="hidden" name="_replyto" value=""/>
+          <input type="text" name="_gotcha" style="display:none"/>
+          <input type="hidden" name="_next" value="https://heyfordcompliance.co.uk/#contact"/>
+
           <div class="form-row-2">
             <div>
               <label class="form-label" for="fname">Your name *</label>
-              <input class="form-input" id="fname" type="text" placeholder="Jane Smith" required/>
+              <input class="form-input" id="fname" name="name" type="text" placeholder="Jane Smith" required/>
             </div>
             <div>
               <label class="form-label" for="fbiz">Business / property name</label>
-              <input class="form-input" id="fbiz" type="text" placeholder="Acme Warehousing Ltd"/>
+              <input class="form-input" id="fbiz" name="business" type="text" placeholder="Acme Warehousing Ltd"/>
             </div>
           </div>
           <div class="form-row-2">
             <div>
               <label class="form-label" for="femail">Email *</label>
-              <input class="form-input" id="femail" type="email" placeholder="you@example.com" required/>
+              <input class="form-input" id="femail" name="email" type="email" placeholder="you@example.com" required/>
             </div>
             <div>
               <label class="form-label" for="fphone">Phone</label>
-              <input class="form-input" id="fphone" type="tel" placeholder="+44 7XXX XXXXXX"/>
+              <input class="form-input" id="fphone" name="phone" type="tel" placeholder="07930 057731"/>
             </div>
           </div>
           <div class="form-row">
             <label class="form-label" for="fplan">Which plan are you interested in?</label>
-            <select class="form-select" id="fplan">
+            <select class="form-select" id="fplan" name="plan">
               <option value="">Not sure yet — happy to advise</option>
               <option>Small Business Plan (£80–£120/month)</option>
               <option>Warehouse / Industrial (£150–£300/month)</option>
@@ -649,11 +655,11 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
           </div>
           <div class="form-row">
             <label class="form-label" for="fmsg">Tell us about your site</label>
-            <textarea class="form-textarea" id="fmsg" placeholder="Site type, number of units, any specific compliance concerns or current setup..."></textarea>
+            <textarea class="form-textarea" id="fmsg" name="message" placeholder="Site type, number of units, any specific compliance concerns or current setup..."></textarea>
             <div class="form-help">The more context you share, the better we can tailor our first visit.</div>
           </div>
           <button class="btn-primary form-submit" type="submit">Send enquiry →</button>
-          <div class="form-footer-note">For urgent questions, call James directly on +44 7XXX XXXXXX.</div>
+          <div class="form-footer-note">For urgent questions, call James directly on 07930 057731.</div>
         </form>
       </div>
     </div>
@@ -676,8 +682,8 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
           </div>
           <p class="footer-desc">Monthly compliance visits covering fire safety, water hygiene, PAT testing, and general facilities. Same-day digital reports. One technician. Bicester &amp; Upper Heyford, Oxfordshire.</p>
           <div class="footer-contact-items">
-            <div class="footer-contact-item"><strong>+44 7XXX XXXXXX</strong></div>
-            <div class="footer-contact-item"><strong>james@heyfordcompliance.co.uk</strong></div>
+            <div class="footer-contact-item"><strong>07930 057731</strong></div>
+            <div class="footer-contact-item"><strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="274d464a4254674f425e4148554344484a574b4e4649444209444809524c">[email&#160;protected]</a></strong></div>
             <div class="footer-contact-item">heyfordcompliance.co.uk</div>
           </div>
         </div>
@@ -720,7 +726,7 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
 <!-- Toast notification -->
 <div class="toast" id="toast">Enquiry sent — we'll be in touch within one working day.</div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── Reveal on scroll ──
 const reveals = document.querySelectorAll('.reveal');
 const io = new IntersectionObserver((entries) => {
@@ -741,24 +747,47 @@ function closeNav() {
 }
 
 // ── Form ──
-function handleSubmit(e) {
+async function handleSubmit(e) {
   e.preventDefault();
+  const form = e.target;
+  const btn  = form.querySelector('.form-submit');
   const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  e.target.reset();
-  setTimeout(() => toast.classList.remove('show'), 4000);
+  const orig  = btn.textContent;
+
+  // Loading state
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+
+  try {
+    const data = new FormData(form);
+    const res  = await fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (res.ok) {
+      toast.textContent = '✓ Enquiry sent — James will reply within one working day.';
+      toast.style.background = 'var(--green)';
+      toast.classList.add('show');
+      form.reset();
+    } else {
+      const json = await res.json();
+      throw new Error(json.error || 'Submission failed');
+    }
+  } catch(err) {
+    toast.textContent = '✗ Something went wrong — please call 07930 057731 directly.';
+    toast.style.background = 'var(--red)';
+    toast.classList.add('show');
+    console.error(err);
+  } finally {
+    btn.textContent = orig;
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    setTimeout(() => toast.classList.remove('show'), 6000);
+  }
 }
 
 // ── Active nav link ──
-const sections = document.querySelectorAll('.anchor-target');
-const navAs = document.querySelectorAll('.nav-links a');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
-  navAs.forEach(a => {
-    a.style.color = a.getAttribute('href') === '#'+current ? 'var(--gold2)' : '';
-  });
-}, { passive: true });
-</script>
-</body>
-</html>
+const sections = document.querySelectorAll('.anchor-tar
