@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Heyford Compliance Co. — Monthly Compliance Visits · Bicester & Upper Heyford</title>
+<meta name="description" content="Monthly compliance visits covering fire safety, PAT testing, water hygiene and more. Same-day digital reports. One technician. Bicester & Upper Heyford, Oxfordshire."/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* ── RESET ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Barlow',sans-serif;background:#E8E4DC;color:#162B52;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+ul{list-style:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none}
+
+/* ── TOKENS ──────────────────────────────────────────────────────────────── */
+:root{
+  --navy:  #0D1F3C;
+  --navy2: #162B52;
+  --navy3: #0A1828;
+  --gold:  #C8922A;
+  --gold2: #E0A83A;
+  --gold3: #F0C060;
+  --cream: #F7F4EE;
+  --lg:    #F2F4F7;
+  --mg:    #8A99B0;
+  --dg:    #D0D5DD;
+  --white: #FFFFFF;
+  --green: #2A8A4A;
+  --red:   #C0392B;
+  --max:   1120px;
+  --pad:   clamp(16px,4vw,48px);
+}
+
+/* ── UTILITIES ───────────────────────────────────────────────────────────── */
+.inner{width:100%;max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.gold{color:var(--gold)}
+.eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.sec-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(22px,3.5vw,32px);font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:10px;line-height:1.05}
+.sec-sub{font-size:clamp(13px,1.5vw,15px);color:var(--mg);line-height:1.7;max-width:600px;margin-bottom:24px}
+
+/* Reveal animation */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-d1{transition-delay:.1s}
+.reveal-d2{transition-delay:.2s}
+.reveal-d3{transition-delay:.3s}
+.reveal-d4{transition-delay:.4s}
+
+/* ── SHELL ───────────────────────────────────────────────────────────────── */
+.page{min-height:100vh;background:var(--white);max-width:1400px;margin:0 auto;box-shadow:0 0 80px rgba(0,0,0,.3);display:flex;flex-direction:column}
+
+/* ── NAV ─────────────────────────────────────────────────────────────────── */
+.nav{background:var(--navy3);border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:100}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 var(--pad);height:56px}
+.nav-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-icon{width:26px;height:26px;flex-shrink:0}
+.nav-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--white);white-space:nowrap}
+.nav-name span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:6px}
+.nav-links a{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mg);padding:6px 10px;border-radius:3px;transition:color .15s,background .15s;white-space:nowrap}
+.nav-links a:hover{color:var(--white);background:rgba(255,255,255,.06)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-phone{font-size:12px;color:var(--mg);white-space:nowrap}
+.nav-phone strong{color:var(--white)}
+.btn-cta{background:var(--gold);color:var(--navy);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;padding:8px 18px;border-radius:2px;transition:background .15s;white-space:nowrap;flex-shrink:0}
+.btn-cta:hover{background:var(--gold2)}
+
+/* Mobile hamburger */
+.nav-hamburger{display:none;flex-direction:column;gap:5px;padding:8px;background:none;border:none}
+.nav-hamburger span{display:block;width:20px;height:2px;background:var(--mg);transition:.2s}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.nav-drawer{display:none;background:var(--navy);border-top:1px solid rgba(255,255,255,.08)}
+.nav-drawer a{display:block;padding:12px var(--pad);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mg);border-bottom:1px solid rgba(255,255,255,.05)}
+.nav-drawer a:hover{color:var(--gold)}
+@media(max-width:900px){
+  .nav-links{display:none}
+  .nav-phone{display:none}
+  .nav-hamburger{display:flex}
+  .nav-drawer.open{display:block}
+}
+@media(max-width:480px){.nav-name{font-size:13px}}
+
+/* ── HERO ────────────────────────────────────────────────────────────────── */
+.hero{background:var(--navy);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3),var(--gold))}
+/* Grid overlay */
+.hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(200,146,42,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,146,42,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.hero-inner{padding:clamp(32px,5vw,72px) var(--pad) clamp(28px,4vw,60px);position:relative;z-index:1}
+.hero-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(24px,4vw,56px);align-items:center}
+@media(max-width:860px){.hero-grid{grid-template-columns:1fr}}
+
+.hero-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--mg);margin-bottom:14px}
+.hero-title{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;line-height:.88;margin-bottom:18px}
+.hero-title .l1{display:block;font-size:clamp(48px,7vw,88px);font-weight:800;color:var(--white)}
+.hero-title .l2{display:block;font-size:clamp(48px,7vw,88px);font-weight:800;color:var(--gold)}
+.hero-title .l3{display:block;font-size:clamp(30px,4vw,52px);font-weight:300;letter-spacing:.14em;color:rgba(255,255,255,.45)}
+.hero-rule{width:56px;height:3px;background:var(--gold);margin-bottom:18px}
+.hero-sub{font-size:clamp(14px,1.6vw,16px);color:var(--mg);line-height:1.7;margin-bottom:20px;max-width:480px}
+.hero-tag{font-family:'Barlow Condensed',sans-serif;font-size:clamp(14px,2vw,18px);font-style:italic;color:rgba(255,255,255,.75);margin-bottom:22px}
+.hero-btns{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.btn-primary{background:var(--gold);color:var(--navy);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;padding:12px 24px;border-radius:2px;transition:background .15s}
+.btn-primary:hover{background:var(--gold2)}
+.btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.25);color:var(--mg);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:10px 20px;border-radius:2px;transition:border-color .15s,color .15s}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.hero-footnote{font-size:12px;color:var(--mg)}
+
+/* Hero card */
+.hero-card{background:var(--navy3);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:clamp(16px,2.5vw,28px);position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;top:-2px;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.hc-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--mg);margin-bottom:14px}
+.hc-stats{display:flex;gap:3px;margin-bottom:16px}
+.hc-stat{flex:1;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:12px 8px;text-align:center;border-radius:3px}
+.hc-num{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--gold);line-height:1;margin-bottom:4px}
+.hc-num.grn{color:var(--green)}
+.hc-lbl{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--mg)}
+.hc-divider{height:1px;background:rgba(255,255,255,.06);margin-bottom:14px}
+.hc-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:2px;background:rgba(42,138,74,.12);border:1px solid rgba(42,138,74,.4);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#A8F0C0;margin-bottom:12px}
+.hc-list{font-size:12px;color:var(--mg);line-height:1.7}
+.hc-list li{display:flex;gap:7px;margin-bottom:7px}
+.hc-list li::before{content:'—';color:var(--gold);flex-shrink:0}
+/* Watermark shield on card */
+.hc-shield{position:absolute;right:-16px;bottom:-16px;opacity:.04;pointer-events:none}
+
+/* ── STAT BAND ───────────────────────────────────────────────────────────── */
+.stat-band{background:var(--navy2);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.stat-band-inner{display:flex;align-items:stretch}
+.sb-item{flex:1;padding:16px 20px;display:flex;align-items:center;gap:12px;border-right:1px solid rgba(255,255,255,.07)}
+.sb-item:last-child{border-right:none}
+.sb-num{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--gold);line-height:1;flex-shrink:0}
+.sb-text{font-size:11px;color:var(--mg);line-height:1.5}
+.sb-text strong{display:block;color:var(--white);font-size:12px;margin-bottom:2px}
+@media(max-width:640px){.stat-band-inner{flex-wrap:wrap}.sb-item{min-width:50%;border-bottom:1px solid rgba(255,255,255,.07)}}
+
+/* ── ABOUT ───────────────────────────────────────────────────────────────── */
+.about-sec{padding:clamp(40px,6vw,80px) 0}
+.about-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(24px,4vw,56px);align-items:start}
+@media(max-width:860px){.about-grid{grid-template-columns:1fr}}
+.about-body p{font-size:clamp(14px,1.5vw,15px);color:#2A3A50;line-height:1.75;margin-bottom:14px}
+.pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.pill{font-size:11px;padding:4px 10px;border-radius:2px;background:var(--lg);color:var(--navy);border:1px solid var(--dg)}
+.about-card{background:var(--lg);border:1px solid var(--dg);border-top:3px solid var(--gold);padding:clamp(16px,2.5vw,24px)}
+.ac-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.why-grid{display:flex;flex-direction:column;gap:10px}
+.why-item{background:var(--white);border:1px solid var(--dg);padding:12px 14px}
+.why-item strong{display:block;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);margin-bottom:4px}
+.why-item p{font-size:12px;color:var(--mg);line-height:1.6}
+
+/* ── SERVICES ────────────────────────────────────────────────────────────── */
+.services-sec{background:var(--lg);border-top:1px solid var(--dg);border-bottom:1px solid var(--dg);padding:clamp(40px,6vw,80px) 0}
+.services-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(24px,4vw,48px);align-items:start}
+@media(max-width:860px){.services-grid{grid-template-columns:1fr}}
+.checks-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+@media(max-width:560px){.checks-grid{grid-template-columns:1fr}}
+.check-item{display:flex;align-items:flex-start;gap:10px;background:var(--white);padding:10px 12px;border:1px solid var(--dg)}
+.check-item:hover{border-color:var(--gold)}
+.ci-icon{width:20px;height:20px;border:1px solid var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green);flex-shrink:0;margin-top:2px}
+.ci-body strong{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:2px}
+.ci-body span{font-size:11px;color:var(--mg);line-height:1.5}
+.report-callout{background:var(--navy);border-top:3px solid var(--gold);padding:16px 18px;margin-top:3px}
+.rc-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.rc-body{font-size:12px;color:var(--mg);line-height:1.65}
+
+.addons-wrap{padding:clamp(16px,2.5vw,24px);background:var(--white);border:1px solid var(--dg);border-top:3px solid var(--navy)}
+.addons-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--navy);margin-bottom:14px}
+.addon-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid var(--lg)}
+.addon-item:last-child{border-bottom:none;padding-bottom:0}
+.addon-name{font-size:13px;color:var(--navy);font-weight:500}
+.addon-sub{font-size:11px;color:var(--mg);margin-top:2px}
+.addon-price{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--gold);white-space:nowrap;flex-shrink:0}
+
+/* ── PLANS ───────────────────────────────────────────────────────────────── */
+.plans-sec{background:var(--cream);border-top:1px solid #E0D9CC;border-bottom:1px solid #E0D9CC;padding:clamp(40px,6vw,80px) 0}
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:24px}
+@media(max-width:860px){.plans-grid{grid-template-columns:1fr}}
+.plan-card{background:var(--white);padding:clamp(16px,2.5vw,28px);border-top:4px solid var(--dg);transition:border-color .2s;display:flex;flex-direction:column;gap:10px}
+.plan-card:hover,.plan-card.featured{border-top-color:var(--gold)}
+.plan-tag{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--mg)}
+.plan-name{font-family:'Barlow Condensed',sans-serif;font-size:clamp(18px,2.5vw,22px);font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)}
+.plan-price{font-family:'Barlow Condensed',sans-serif;font-size:clamp(20px,2.8vw,26px);font-weight:700;color:var(--gold);line-height:1}
+.plan-meta{font-size:12px;color:var(--mg);padding:8px 0;border-top:1px solid var(--lg);border-bottom:1px solid var(--lg)}
+.plan-list li{display:flex;gap:8px;font-size:12px;color:#2A3A50;padding:5px 0;border-bottom:1px solid var(--lg);line-height:1.5}
+.plan-list li:last-child{border-bottom:none}
+.plan-list li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0}
+
+.included-note{background:var(--navy);padding:14px 18px;font-size:12px;color:var(--mg);line-height:1.7}
+.included-note strong{color:var(--gold2)}
+
+/* ── PROCESS ─────────────────────────────────────────────────────────────── */
+.process-sec{padding:clamp(40px,6vw,80px) 0}
+.steps-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-bottom:24px}
+@media(max-width:860px){.steps-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.steps-grid{grid-template-columns:1fr}}
+.step-card{background:var(--lg);border:1px solid var(--dg);padding:20px 16px;position:relative;overflow:hidden}
+.step-num{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:800;color:rgba(200,146,42,.15);line-height:1;margin-bottom:4px}
+.step-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--navy);margin-bottom:6px}
+.step-body{font-size:12px;color:var(--mg);line-height:1.65}
+.step-card::after{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--dg);transition:background .2s}
+.step-card:hover::after{background:var(--gold)}
+.process-quote{background:var(--navy);border-left:4px solid var(--gold);padding:18px 22px;font-family:'Barlow Condensed',sans-serif;font-size:clamp(16px,2.5vw,20px);font-weight:600;font-style:italic;color:var(--white);line-height:1.5}
+.process-quote span{color:var(--gold)}
+
+/* ── MARKET ──────────────────────────────────────────────────────────────── */
+.market-sec{background:var(--lg);border-top:1px solid var(--dg);border-bottom:1px solid var(--dg);padding:clamp(40px,6vw,80px) 0}
+.market-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+@media(max-width:720px){.market-grid{grid-template-columns:1fr}}
+.market-card{background:var(--white);border:1px solid var(--dg);padding:clamp(16px,2.5vw,24px)}
+.mc-num{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:800;color:rgba(200,146,42,.18);line-height:1;margin-bottom:4px}
+.mc-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--navy);margin-bottom:6px}
+.mc-body{font-size:13px;color:var(--mg);line-height:1.65;margin-bottom:12px}
+.mc-tags{display:flex;flex-direction:column;gap:4px}
+.mc-tag{font-size:11px;color:#2A3A50;padding:5px 8px;background:var(--lg);border-left:2px solid var(--gold);display:block}
+
+/* ── FREE VISIT ──────────────────────────────────────────────────────────── */
+.free-sec{background:var(--navy);position:relative;overflow:hidden;padding:clamp(40px,6vw,80px) 0}
+.free-sec::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(200,146,42,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,146,42,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.free-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(24px,4vw,56px);align-items:center;position:relative;z-index:1}
+@media(max-width:860px){.free-grid{grid-template-columns:1fr}}
+.free-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.free-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,4.5vw,48px);font-weight:800;text-transform:uppercase;letter-spacing:.04em;line-height:.95;color:var(--white);margin-bottom:16px}
+.free-title span{color:var(--gold)}
+.free-sub{font-size:clamp(13px,1.5vw,15px);color:var(--mg);line-height:1.7;margin-bottom:22px;max-width:480px}
+.free-small{font-size:11px;color:var(--mg);margin-top:10px;font-style:italic}
+.free-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);padding:clamp(16px,2.5vw,24px)}
+.free-card-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.free-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px;color:var(--mg);line-height:1.6}
+.free-item:last-child{border-bottom:none;padding-bottom:0}
+.free-item-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+/* ── CONTACT ─────────────────────────────────────────────────────────────── */
+.contact-sec{padding:clamp(40px,6vw,80px) 0}
+.contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(24px,4vw,48px);align-items:start}
+@media(max-width:860px){.contact-grid{grid-template-columns:1fr}}
+.contact-info{background:var(--navy);border-top:3px solid var(--gold);padding:clamp(16px,2.5vw,28px)}
+.ci-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.ci-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.ci-row:last-of-type{border-bottom:none}
+.ci-key{font-size:11px;color:var(--mg);white-space:nowrap}
+.ci-val{font-size:13px;color:var(--white);font-weight:500;text-align:right}
+.ci-tagline{margin-top:18px;padding:12px 14px;border-left:3px solid var(--gold);background:rgba(255,255,255,.03);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-style:italic;color:rgba(255,255,255,.6)}
+
+.form-wrap{background:var(--lg);border:1px solid var(--dg);border-top:3px solid var(--navy);padding:clamp(16px,2.5vw,28px)}
+.form-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--navy);margin-bottom:18px}
+.form-row{margin-bottom:12px}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:480px){.form-row-2{grid-template-columns:1fr}}
+.form-label{display:block;font-size:11px;color:var(--mg);letter-spacing:.05em;margin-bottom:4px}
+.form-input,.form-textarea,.form-select{width:100%;border:1px solid var(--dg);background:var(--white);padding:9px 11px;font-size:13px;font-family:'Barlow',sans-serif;color:var(--navy);outline:none;border-radius:2px;transition:border-color .15s,box-shadow .15s}
+.form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(200,146,42,.18)}
+.form-textarea{min-height:88px;resize:vertical}
+.form-help{font-size:10px;color:var(--mg);margin-top:3px}
+.form-submit{width:100%;padding:13px;font-size:13px;letter-spacing:.16em;margin-top:4px}
+.form-footer-note{font-size:11px;color:var(--mg);text-align:center;margin-top:8px}
+
+/* ── FOOTER ──────────────────────────────────────────────────────────────── */
+footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
+.footer-main{padding:clamp(24px,4vw,48px) var(--pad) clamp(20px,3vw,36px)}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:clamp(24px,4vw,48px)}
+@media(max-width:720px){.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+.footer-brand-col{}
+.footer-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.footer-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--white)}
+.footer-name span{color:var(--gold)}
+.footer-desc{font-size:12px;color:var(--mg);line-height:1.7;margin-bottom:14px}
+.footer-contact-items{display:flex;flex-direction:column;gap:5px}
+.footer-contact-item{font-size:11px;color:var(--mg)}
+.footer-contact-item strong{color:rgba(255,255,255,.6)}
+.footer-col-title{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.footer-links-list{display:flex;flex-direction:column;gap:7px}
+.footer-links-list a{font-size:12px;color:var(--mg);transition:color .15s}
+.footer-links-list a:hover{color:var(--white)}
+.footer-services-list{display:flex;flex-direction:column;gap:5px}
+.footer-services-list li{font-size:11px;color:var(--mg);display:flex;gap:6px}
+.footer-services-list li::before{content:'—';color:rgba(200,146,42,.5);flex-shrink:0}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding:14px var(--pad);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.footer-tagline{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-style:italic;color:rgba(255,255,255,.35)}
+.footer-legal{font-size:10px;color:rgba(255,255,255,.2);text-align:right}
+
+/* ── ANCHOR OFFSET ───────────────────────────────────────────────────────── */
+.anchor-target{scroll-margin-top:60px}
+
+/* ── TOAST ───────────────────────────────────────────────────────────────── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:var(--white);padding:12px 20px;border-radius:3px;font-size:13px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:0;transform:translateY(10px);transition:.3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ── NAV ── -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      <svg class="nav-icon" viewBox="0 0 72 72" fill="none">
+        <path d="M36 4L8 16V38C8 53.2 20.4 65.4 36 68C51.6 65.4 64 53.2 64 38V16L36 4Z" fill="rgba(255,255,255,0.05)"/>
+        <path d="M36 10L13 20.5V38C13 50.2 23.2 60.8 36 63.4C48.8 60.8 59 50.2 59 38V20.5L36 10Z" fill="none" stroke="#C8922A" stroke-width="1.5"/>
+        <path d="M24 37L31.5 45L48 28" stroke="#C8922A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="nav-name">Heyford <span>Compliance</span> Co.</div>
+    </a>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#plans">Plans</a>
+      <a href="#process">How it works</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <div class="nav-phone"><strong>+44 7XXX XXXXXX</strong></div>
+      <button class="btn-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Free first visit</button>
+      <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav class="nav-drawer" id="navDrawer">
+    <a href="#about" onclick="closeNav()">About</a>
+    <a href="#services" onclick="closeNav()">Services</a>
+    <a href="#plans" onclick="closeNav()">Plans & Pricing</a>
+    <a href="#process" onclick="closeNav()">How it works</a>
+    <a href="#market" onclick="closeNav()">Who we serve</a>
+    <a href="#contact" onclick="closeNav()">Contact & free visit</a>
+  </nav>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner inner">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow reveal">Local Compliance Service · Bicester &amp; Upper Heyford, Oxfordshire</div>
+        <h1 class="hero-title reveal reveal-d1">
+          <span class="l1">Heyford</span>
+          <span class="l2">Compliance</span>
+          <span class="l3">Co.</span>
+        </h1>
+        <div class="hero-rule reveal reveal-d2"></div>
+        <p class="hero-sub reveal reveal-d2">Monthly compliance visits covering fire safety, water hygiene, PAT testing, and general facilities — with a same-day digital report in your inbox every time.</p>
+        <p class="hero-tag reveal reveal-d3">"One Visit. Every Check. Complete Peace of Mind."</p>
+        <div class="hero-btns reveal reveal-d3">
+          <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Book free first visit</button>
+          <button class="btn-ghost" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">See what's included</button>
+        </div>
+        <p class="hero-footnote reveal reveal-d4">Serving warehouses, small businesses, and landlords across Bicester, Upper Heyford, and surrounding villages.</p>
+      </div>
+      <aside class="hero-card reveal reveal-d2">
+        <div class="hc-label">At a glance</div>
+        <div class="hc-stats">
+          <div class="hc-stat"><div class="hc-num">1</div><div class="hc-lbl">Visit / Month</div></div>
+          <div class="hc-stat"><div class="hc-num">10+</div><div class="hc-lbl">Checks Covered</div></div>
+          <div class="hc-stat"><div class="hc-num grn">0</div><div class="hc-lbl">Hassle</div></div>
+        </div>
+        <div class="hc-divider"></div>
+        <div class="hc-pill">✓ Free first visit · No obligation</div>
+        <ul class="hc-list">
+          <li>One appointment covers fire, water, PAT, and facilities. No juggling multiple contractors.</li>
+          <li>Self-built digital tools generate your branded PDF report automatically — same day, every time.</li>
+          <li>Local technician based in Upper Heyford. No call centre. No account manager layers.</li>
+          <li>Monthly subscription from <strong style="color:var(--gold2)">£80/month</strong> — predictable, no surprises.</li>
+        </ul>
+        <svg class="hc-shield" width="140" height="160" viewBox="0 0 72 80" fill="none">
+          <path d="M36 2L4 16V40C4 57 18 70 36 74C54 70 68 57 68 40V16L36 2Z" fill="white"/>
+          <path d="M22 39L30 48L50 26" stroke="#C8922A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ── STAT BAND ── -->
+<div class="stat-band">
+  <div class="inner">
+    <div class="stat-band-inner">
+      <div class="sb-item"><div class="sb-num">10+</div><div class="sb-text"><strong>Compliance checks</strong>Every routine check in one visit</div></div>
+      <div class="sb-item"><div class="sb-num" style="color:var(--green)">0h</div><div class="sb-text"><strong>Admin for you</strong>We handle everything, end to end</div></div>
+      <div class="sb-item"><div class="sb-num">1d</div><div class="sb-text"><strong>Report turnaround</strong>PDF in your inbox the same day</div></div>
+      <div class="sb-item"><div class="sb-num">£0</div><div class="sb-text"><strong>First visit cost</strong>Free first check, no obligation</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ABOUT ── -->
+<section class="about-sec anchor-target" id="about">
+  <div class="inner">
+    <div class="eyebrow reveal">01 · Who we are</div>
+    <h2 class="sec-title reveal reveal-d1">Modern, local compliance — done properly</h2>
+    <div class="about-grid">
+      <div class="about-body reveal reveal-d2">
+        <p>Heyford Compliance Co. is a modern, local compliance service covering Bicester, Upper Heyford, and the surrounding villages of Oxfordshire. We deliver every routine compliance check your business needs in a single monthly visit — with a digital report in your inbox the same day.</p>
+        <p>We work with warehouses, small businesses, and landlords who want compliance handled properly — without the hassle of managing multiple contractors, chasing paperwork, or wondering if they're covered.</p>
+        <p>Every visit is systematic, documented, and designed to give you complete peace of mind. You get one point of contact who knows your site, understands your risks, and takes responsibility for the full compliance cycle — month after month.</p>
+        <div class="pill-row" style="margin-top:4px">
+          <div class="pill">Local Upper Heyford technician</div>
+          <div class="pill">Same-day digital reports</div>
+          <div class="pill">Predictable monthly visits</div>
+          <div class="pill">Built on self-built digital tools</div>
+        </div>
+      </div>
+      <div class="about-card reveal reveal-d3">
+        <div class="ac-title">Why local businesses choose us</div>
+        <div class="why-grid">
+          <div class="why-item">
+            <strong>All checks in one visit</strong>
+            <p>Fire, water, PAT, and facilities — all in one appointment. No juggling multiple contractors or separate schedules.</p>
+          </div>
+          <div class="why-item">
+            <strong>Same-day digital reports</strong>
+            <p>Branded PDF delivered within hours. Ready for your insurer, auditor, or HSE visit — without lifting a finger.</p>
+          </div>
+          <div class="why-item">
+            <strong>One technician. One relationship.</strong>
+            <p>No call centre. No account manager layers. A local technician who knows your site and takes ownership of your compliance.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section class="services-sec anchor-target" id="services">
+  <div class="inner">
+    <div class="eyebrow reveal">02 · Our services</div>
+    <h2 class="sec-title reveal reveal-d1">One monthly visit. <span class="gold">Every essential check.</span></h2>
+    <p class="sec-sub reveal reveal-d1">One appointment. All checks. Digital report by evening.</p>
+    <div class="services-grid">
+      <div>
+        <div class="checks-grid reveal reveal-d2">
+          <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Fire alarm test</strong><span>Full functional test with logged results.</span></div></div>
+          <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Emergency lighting</strong><span>Duration and function test, recorded.</span></div></div>
+          <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Fire door inspection</strong><span>Gap, seal, self-closer, and signage checks.</span></div></div>
+          <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Extinguisher check</strong><span>Condition, pressure, tag, and placement verified.</span></div></div>
+          <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Legionella monitoring</strong><span>Cold below 20°C, hot above 50°C — documented.</span></div></div>
+          <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Water hygiene flushing</strong><span>Infrequently used outlets flushed and logged.</span></div></div>
+          <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>PAT testing (rolling)</strong><span>All appliances covered across 12 months.</span></div></div>
+          <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Facilities walk-through</strong><span>General safety, signage, and condition check.</span></div></div>
+          <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Minor repairs on the spot</strong><span>Small fixes handled at no extra charge.</span></div></div>
+          <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Same-day digital report</strong><span>Branded PDF to your inbox before end of day.</span></div></div>
+        </div>
+        <div class="report-callout reveal reveal-d3">
+          <div class="rc-title">The digital report — your hidden differentiator</div>
+          <div class="rc-body">Every client receives a branded PDF report within hours of the visit — not days. It includes pass/fail status per check, photographic evidence where required, action items, and next visit date. Clients keep these for their insurance files. No other local provider generates this automatically.</div>
+        </div>
+      </div>
+      <div class="reveal reveal-d3">
+        <div class="addons-wrap">
+          <div class="addons-title">Optional add-on services</div>
+          <div class="addon-item"><div><div class="addon-name">Fire risk assessment</div><div class="addon-sub">Written FRA to Regulatory Reform Order standard.</div></div><div class="addon-price">£150–£350</div></div>
+          <div class="addon-item"><div><div class="addon-name">Annual full PAT test</div><div class="addon-sub">Complete inventory test with numbered certificate.</div></div><div class="addon-price">£1.50–£2/item</div></div>
+          <div class="addon-item"><div><div class="addon-name">Deep maintenance day</div><div class="addon-sub">Full-day reactive and planned maintenance.</div></div><div class="addon-price">£200–£400</div></div>
+          <div class="addon-item"><div><div class="addon-name">Landlord safety package</div><div class="addon-sub">Fire, water, and electrical coordination per property.</div></div><div class="addon-price">£40–£80/property</div></div>
+          <div class="addon-item"><div><div class="addon-name">Emergency call-out</div><div class="addon-sub">Same or next-day response when you need it.</div></div><div class="addon-price">£45–£90/hr</div></div>
+          <div class="addon-item"><div><div class="addon-name">Annual compliance MOT</div><div class="addon-sub">Full site audit with written action plan.</div></div><div class="addon-price">POA</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PLANS ── -->
+<section class="plans-sec anchor-target" id="plans">
+  <div class="inner">
+    <div class="eyebrow reveal">03 · Plans &amp; pricing</div>
+    <h2 class="sec-title reveal reveal-d1">Simple, transparent monthly pricing</h2>
+    <p class="sec-sub reveal reveal-d1">No surprises. Each plan includes all 10 core checks, same-day branded PDF reports, CRM-tracked compliance history, automated visit reminders, and a direct line to your technician.</p>
+    <div class="plans-grid reveal reveal-d2">
+      <div class="plan-card">
+        <div class="plan-tag">For shops, cafés, salons, offices</div>
+        <div class="plan-name">Small Business Plan</div>
+        <div class="plan-price">£80–£120 / month</div>
+        <div class="plan-meta">30–45 min visit · Ideal for 1–2 units</div>
+        <ul class="plan-list">
+          <li>All 10 core compliance checks included</li>
+          <li>Same-day branded digital report</li>
+          <li>Rolling PAT schedule across 12 months</li>
+          <li>Direct line to your technician</li>
+        </ul>
+      </div>
+      <div class="plan-card featured">
+        <div class="plan-tag" style="color:var(--gold)">Most popular · Industrial &amp; commercial</div>
+        <div class="plan-name">Warehouse / Industrial</div>
+        <div class="plan-price">£150–£300 / month</div>
+        <div class="plan-meta">60–90 min visit · Ideal for higher-risk sites</div>
+        <ul class="plan-list">
+          <li>Full fire, water, PAT, and facilities coverage</li>
+          <li>Detailed digital reporting for insurers and HSE</li>
+          <li>Minor repairs handled on the spot</li>
+          <li>Multi-unit discounts available</li>
+        </ul>
+      </div>
+      <div class="plan-card">
+        <div class="plan-tag">Residential &amp; commercial landlords</div>
+        <div class="plan-name">Landlord Plan</div>
+        <div class="plan-price">£40–£60 / property / month</div>
+        <div class="plan-meta">Rolling schedule · Any portfolio size</div>
+        <ul class="plan-list">
+          <li>Fire, water, and safety checks coordinated</li>
+          <li>Per-property digital reports</li>
+          <li>Ideal for HMO and mixed portfolios</li>
+          <li>Portfolio discounts for 5+ properties</li>
+        </ul>
+      </div>
+    </div>
+    <div class="included-note reveal reveal-d3">
+      <strong>Included in every plan:</strong> All core checks · Same-day branded PDF report · CRM-tracked compliance history · Automated visit reminders · Direct line to James Gilbert, your technician and founder.
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:20px" class="reveal reveal-d3">
+      <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get a tailored quote</button>
+      <span style="font-size:12px;color:var(--mg)">Free first visit for all new clients — see the full service before you commit to anything.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROCESS ── -->
+<section class="process-sec anchor-target" id="process">
+  <div class="inner">
+    <div class="eyebrow reveal">04 · How it works</div>
+    <h2 class="sec-title reveal reveal-d1">A simple, predictable monthly cycle</h2>
+    <p class="sec-sub reveal reveal-d1">Same day each month. All checks completed systematically. Issues fixed on the spot. Report in your inbox before end of day.</p>
+    <div class="steps-grid reveal reveal-d2">
+      <div class="step-card"><div class="step-num">01</div><div class="step-title">We visit</div><p class="step-body">Same day each month — you never need to remember or book. We just show up.</p></div>
+      <div class="step-card"><div class="step-num">02</div><div class="step-title">We check everything</div><p class="step-body">All 10 compliance checks completed systematically using digital checklists.</p></div>
+      <div class="step-card"><div class="step-num">03</div><div class="step-title">We fix minor issues</div><p class="step-body">Small repairs handled on the spot. No extra charge. No follow-up booking needed.</p></div>
+      <div class="step-card"><div class="step-num">04</div><div class="step-title">We send your report</div><p class="step-body">Branded digital PDF auto-generated and in your inbox before end of day.</p></div>
+      <div class="step-card"><div class="step-num">05</div><div class="step-title">You're covered</div><p class="step-body">Clean documentation ready for insurers, auditors, or HSE — no chasing paperwork.</p></div>
+    </div>
+    <div class="process-quote reveal reveal-d3">"Most businesses in Bicester have never had a compliance visit. <span>One visit with us puts you ahead of 90% of your neighbours.</span>"</div>
+  </div>
+</section>
+
+<!-- ── MARKET ── -->
+<section class="market-sec anchor-target" id="market">
+  <div class="inner">
+    <div class="eyebrow reveal">05 · Who we serve</div>
+    <h2 class="sec-title reveal reveal-d1">Built for real local sites</h2>
+    <p class="sec-sub reveal reveal-d1">We focus on the kinds of sites that make Bicester and Upper Heyford tick — from industrial units to high street shops to landlord portfolios.</p>
+    <div class="market-grid reveal reveal-d2">
+      <div class="market-card">
+        <div class="mc-num">01</div>
+        <div class="mc-title">Warehouses &amp; Industrial</div>
+        <div class="mc-body">High-value sites that need consistent documentation and prefer a single trusted contractor over managing multiple specialists. Monthly plans from £150.</div>
+        <div class="mc-tags">
+          <span class="mc-tag">Industrial units &amp; business parks</span>
+          <span class="mc-tag">Workshops &amp; light manufacturing</span>
+          <span class="mc-tag">Storage &amp; logistics spaces</span>
+        </div>
+      </div>
+      <div class="market-card">
+        <div class="mc-num">02</div>
+        <div class="mc-title">Small Businesses</div>
+        <div class="mc-body">Time-poor businesses that want compliance handled without having to think about it. Referrals spread quickly in Bicester's local business community. From £80/month.</div>
+        <div class="mc-tags">
+          <span class="mc-tag">Shops &amp; retail units</span>
+          <span class="mc-tag">Cafés, salons, and studios</span>
+          <span class="mc-tag">Offices and co-working spaces</span>
+        </div>
+      </div>
+      <div class="market-card">
+        <div class="mc-num">03</div>
+        <div class="mc-title">Landlords</div>
+        <div class="mc-body">Portfolio clients who need consistent documentation across multiple properties. Five properties at £50/month = £250/month from one relationship. Portfolio discounts available.</div>
+        <div class="mc-tags">
+          <span class="mc-tag">Residential landlords &amp; HMOs</span>
+          <span class="mc-tag">Mixed-use &amp; commercial portfolios</span>
+          <span class="mc-tag">Local property managers</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FREE VISIT ── -->
+<section class="free-sec">
+  <div class="inner">
+    <div class="free-grid">
+      <div>
+        <div class="free-eyebrow reveal">Free first visit · No obligation</div>
+        <h2 class="free-title reveal reveal-d1">Try the full<br><span>service first.</span></h2>
+        <p class="free-sub reveal reveal-d2">We offer a complimentary first compliance check to all new clients — no obligation, no contracts, no pressure. You'll receive the full digital report and see exactly what we do before committing to anything.</p>
+        <button class="btn-primary reveal reveal-d2" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Arrange your free visit</button>
+        <p class="free-small reveal reveal-d3">Available for warehouses, small businesses, and landlords within Bicester, Upper Heyford, and nearby villages.</p>
+      </div>
+      <div class="free-card reveal reveal-d2">
+        <div class="free-card-title">What your free visit includes</div>
+        <div class="free-item"><span class="free-item-icon">✓</span>Full monthly visit — all 10 compliance checks completed on-site, exactly as a paid visit.</div>
+        <div class="free-item"><span class="free-item-icon">✓</span>Same-day branded PDF compliance report delivered to your email before end of day.</div>
+        <div class="free-item"><span class="free-item-icon">✓</span>Clear list of any actions or recommendations, with no obligation to act through us.</div>
+        <div class="free-item"><span class="free-item-icon" style="color:var(--mg)">—</span>No hard sell. No hidden fees. No pressure to sign a contract.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section class="contact-sec anchor-target" id="contact">
+  <div class="inner">
+    <div class="eyebrow reveal">06 · Get in touch</div>
+    <h2 class="sec-title reveal reveal-d1">Let's get your first visit booked</h2>
+    <p class="sec-sub reveal reveal-d1">Whether you want a free first visit, a quote, or just a quick sense-check of your current setup, you can reach James directly — no call centre, no ticket system.</p>
+    <div class="contact-grid">
+      <div class="contact-info reveal reveal-d2">
+        <div class="ci-title">Direct contact details</div>
+        <div class="ci-row"><span class="ci-key">Name</span><span class="ci-val">James Gilbert</span></div>
+        <div class="ci-row"><span class="ci-key">Role</span><span class="ci-val">Compliance Technician &amp; Founder</span></div>
+        <div class="ci-row"><span class="ci-key">Phone</span><span class="ci-val">+44 7XXX XXXXXX</span></div>
+        <div class="ci-row"><span class="ci-key">Email</span><span class="ci-val">james@heyfordcompliance.co.uk</span></div>
+        <div class="ci-row"><span class="ci-key">Website</span><span class="ci-val">heyfordcompliance.co.uk</span></div>
+        <div class="ci-row"><span class="ci-key">Location</span><span class="ci-val">Upper Heyford, Bicester, Oxfordshire</span></div>
+        <div class="ci-tagline">"One Visit. Every Check. Complete Peace of Mind."</div>
+      </div>
+      <div class="form-wrap reveal reveal-d3">
+        <div class="form-title">Quick enquiry — we reply within one working day</div>
+        <form id="contactForm" onsubmit="handleSubmit(event)">
+          <div class="form-row-2">
+            <div>
+              <label class="form-label" for="fname">Your name *</label>
+              <input class="form-input" id="fname" type="text" placeholder="Jane Smith" required/>
+            </div>
+            <div>
+              <label class="form-label" for="fbiz">Business / property name</label>
+              <input class="form-input" id="fbiz" type="text" placeholder="Acme Warehousing Ltd"/>
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div>
+              <label class="form-label" for="femail">Email *</label>
+              <input class="form-input" id="femail" type="email" placeholder="you@example.com" required/>
+            </div>
+            <div>
+              <label class="form-label" for="fphone">Phone</label>
+              <input class="form-input" id="fphone" type="tel" placeholder="+44 7XXX XXXXXX"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="fplan">Which plan are you interested in?</label>
+            <select class="form-select" id="fplan">
+              <option value="">Not sure yet — happy to advise</option>
+              <option>Small Business Plan (£80–£120/month)</option>
+              <option>Warehouse / Industrial (£150–£300/month)</option>
+              <option>Landlord Plan (£40–£60/property/month)</option>
+              <option>Free first visit only</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="fmsg">Tell us about your site</label>
+            <textarea class="form-textarea" id="fmsg" placeholder="Site type, number of units, any specific compliance concerns or current setup..."></textarea>
+            <div class="form-help">The more context you share, the better we can tailor our first visit.</div>
+          </div>
+          <button class="btn-primary form-submit" type="submit">Send enquiry →</button>
+          <div class="form-footer-note">For urgent questions, call James directly on +44 7XXX XXXXXX.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-main">
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-brand-col">
+          <div class="footer-logo-row">
+            <svg width="24" height="24" viewBox="0 0 72 72" fill="none">
+              <path d="M36 4L8 16V38C8 53.2 20.4 65.4 36 68C51.6 65.4 64 53.2 64 38V16L36 4Z" fill="rgba(255,255,255,.05)"/>
+              <path d="M36 10L13 20.5V38C13 50.2 23.2 60.8 36 63.4C48.8 60.8 59 50.2 59 38V20.5L36 10Z" stroke="#C8922A" stroke-width="1.5" fill="none"/>
+              <path d="M24 37L31.5 45L48 28" stroke="#C8922A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="footer-name">Heyford <span>Compliance</span> Co.</div>
+          </div>
+          <p class="footer-desc">Monthly compliance visits covering fire safety, water hygiene, PAT testing, and general facilities. Same-day digital reports. One technician. Bicester &amp; Upper Heyford, Oxfordshire.</p>
+          <div class="footer-contact-items">
+            <div class="footer-contact-item"><strong>+44 7XXX XXXXXX</strong></div>
+            <div class="footer-contact-item"><strong>james@heyfordcompliance.co.uk</strong></div>
+            <div class="footer-contact-item">heyfordcompliance.co.uk</div>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Navigation</div>
+          <ul class="footer-links-list">
+            <li><a href="#about">Who we are</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#plans">Plans &amp; pricing</a></li>
+            <li><a href="#process">How it works</a></li>
+            <li><a href="#market">Who we serve</a></li>
+            <li><a href="#contact">Contact &amp; free visit</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Services covered</div>
+          <ul class="footer-services-list">
+            <li>Fire alarm testing</li>
+            <li>Emergency lighting</li>
+            <li>Fire door inspection</li>
+            <li>Extinguisher checks</li>
+            <li>Legionella monitoring</li>
+            <li>Water hygiene flushing</li>
+            <li>PAT testing</li>
+            <li>Facilities walk-through</li>
+            <li>Same-day digital reports</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-tagline">"One Visit. Every Check. Complete Peace of Mind."</div>
+    <div class="footer-legal">Heyford Compliance Co. is a trading name of Giblets Creations · Upper Heyford, Bicester, Oxfordshire · heyfordcompliance.co.uk</div>
+  </div>
+</footer>
+
+</div><!-- /page -->
+
+<!-- Toast notification -->
+<div class="toast" id="toast">Enquiry sent — we'll be in touch within one working day.</div>
+
+<script>
+// ── Reveal on scroll ──
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+reveals.forEach(el => io.observe(el));
+
+// ── Mobile nav ──
+const hamburger = document.getElementById('hamburger');
+const navDrawer = document.getElementById('navDrawer');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  navDrawer.classList.toggle('open');
+});
+function closeNav() {
+  hamburger.classList.remove('open');
+  navDrawer.classList.remove('open');
+}
+
+// ── Form ──
+function handleSubmit(e) {
+  e.preventDefault();
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  e.target.reset();
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+// ── Active nav link ──
+const sections = document.querySelectorAll('.anchor-target');
+const navAs = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
+  navAs.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#'+current ? 'var(--gold2)' : '';
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
