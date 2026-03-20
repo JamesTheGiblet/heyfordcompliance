@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="robots" content="noindex, nofollow"/>
+<meta name="theme-color" content="#0D1F3C"/>
+<title>HCC Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}
+body{background:var(--navy3);color:var(--white);display:flex;flex-direction:column;min-height:100vh}
+:root{
+  --navy:#0D1F3C;--navy2:#162B52;--navy3:#0A1828;
+  --gold:#C8922A;--gold2:#E0A83A;
+  --lg:#F2F4F7;--mg:#8A99B0;--dg:#D0D5DD;
+  --white:#FFFFFF;--green:#2A8A4A;--red:#C0392B;
+}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:24px;
+  background:var(--navy3);
+  position:relative;overflow:hidden;
+}
+#loginScreen::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(200,146,42,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(200,146,42,.03) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;
+}
+.login-card{
+  background:var(--navy2);
+  border-top:3px solid var(--gold);
+  width:100%;max-width:380px;
+  position:relative;z-index:1;
+  box-shadow:0 24px 80px rgba(0,0,0,.5);
+}
+.login-header{padding:28px 28px 20px}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.login-logo svg{width:28px;height:28px;flex-shrink:0}
+.login-brand{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--white)}
+.login-brand span{color:var(--gold)}
+.login-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);line-height:1;margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--mg)}
+.login-body{padding:0 28px 20px}
+.login-field{margin-bottom:14px}
+.login-label{display:block;font-size:11px;font-weight:600;color:var(--mg);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.login-input{
+  width:100%;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  color:var(--white);padding:11px 14px;font-size:15px;
+  font-family:'Barlow',sans-serif;outline:none;border-radius:2px;
+  transition:.15s;letter-spacing:.08em;
+}
+.login-input:focus{border-color:var(--gold);background:rgba(255,255,255,.08)}
+.login-input::placeholder{color:rgba(255,255,255,.2);letter-spacing:.04em}
+.login-error{
+  font-size:12px;color:var(--red);margin-top:6px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  display:none
+}
+.login-error.show{display:block}
+.login-footer{padding:16px 28px 28px}
+.login-btn{
+  width:100%;background:var(--gold);color:var(--navy);
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:.18em;text-transform:uppercase;padding:13px;
+  border:none;cursor:pointer;border-radius:2px;transition:.15s;
+}
+.login-btn:hover{background:var(--gold2)}
+.login-btn:active{transform:scale(.99)}
+.login-note{font-size:11px;color:rgba(255,255,255,.2);text-align:center;margin-top:12px}
+
+/* ── PORTAL SCREEN ── */
+#portalScreen{display:none;flex:1;flex-direction:column}
+.portal-header{
+  background:var(--navy);border-bottom:2px solid var(--gold);
+  padding:0 var(--pad,24px);height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.portal-brand{display:flex;align-items:center;gap:10px}
+.portal-brand svg{width:22px;height:22px}
+.portal-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--white)}
+.portal-name span{color:var(--gold)}
+.portal-actions{display:flex;gap:8px;align-items:center}
+.portal-date{font-size:11px;color:var(--mg);margin-right:4px}
+.portal-btn{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:var(--mg);font-family:'Barlow Condensed',sans-serif;font-size:10px;
+  font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  padding:5px 10px;border-radius:2px;cursor:pointer;transition:.15s;
+}
+.portal-btn:hover{background:rgba(255,255,255,.14);color:var(--white)}
+.portal-main{
+  flex:1;padding:32px 24px;
+  background:var(--navy3);
+  position:relative;overflow:hidden;
+}
+.portal-main::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(200,146,42,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(200,146,42,.02) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;
+}
+.portal-inner{position:relative;z-index:1;max-width:900px;margin:0 auto}
+.portal-welcome{margin-bottom:28px}
+.portal-greeting{
+  font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--white);margin-bottom:4px;
+}
+.portal-greeting span{color:var(--gold)}
+.portal-sub{font-size:13px;color:var(--mg)}
+
+/* ── TOOL CARDS ── */
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:24px}
+.tool-card{
+  background:var(--navy2);border:1px solid rgba(255,255,255,.08);
+  border-top:3px solid var(--dg);
+  padding:24px;cursor:pointer;
+  transition:border-top-color .15s,box-shadow .15s,transform .15s;
+  text-decoration:none;color:inherit;display:block;
+}
+.tool-card:hover{
+  border-top-color:var(--gold);
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+  transform:translateY(-2px);
+}
+.tool-icon{font-size:32px;margin-bottom:14px;display:block}
+.tool-name{
+  font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--white);margin-bottom:6px;
+}
+.tool-desc{font-size:13px;color:var(--mg);line-height:1.6;margin-bottom:14px}
+.tool-features{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
+.tool-feature{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;color:rgba(255,255,255,.5);
+}
+.tool-feature::before{content:'—';color:var(--gold);flex-shrink:0}
+.tool-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--gold);
+  transition:.15s;
+}
+.tool-card:hover .tool-cta{gap:12px}
+
+/* ── QUICK STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:24px}
+@media(max-width:600px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+.stat-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  padding:14px 16px;
+}
+.stat-num{
+  font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;
+  color:var(--gold);line-height:1;margin-bottom:4px;
+}
+.stat-label{font-size:11px;color:var(--mg);letter-spacing:.1em;text-transform:uppercase;line-height:1.4}
+
+/* ── RECENT SECTION ── */
+.section-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:12px;
+}
+.recent-list{display:flex;flex-direction:column;gap:6px}
+.recent-item{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+  border-left:3px solid var(--gold);
+  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  font-size:12px;
+}
+.recent-name{font-weight:600;color:var(--white)}
+.recent-meta{color:var(--mg);font-size:11px;margin-top:2px}
+.recent-badge{
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;
+  flex-shrink:0;
+}
+.recent-badge.survey{background:rgba(42,138,74,.15);color:#A8F0C0;border:1px solid rgba(42,138,74,.3)}
+.recent-badge.visit{background:rgba(200,146,42,.15);color:var(--gold2);border:1px solid rgba(200,146,42,.3)}
+.empty-state{font-size:12px;color:rgba(255,255,255,.2);padding:12px 0;font-style:italic}
+
+/* ── PORTAL FOOTER ── */
+.portal-footer{
+  background:var(--navy3);border-top:1px solid rgba(255,255,255,.06);
+  padding:12px 24px;display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:8px;flex-shrink:0;
+}
+.portal-footer p{font-size:10px;color:rgba(255,255,255,.2);letter-spacing:.06em}
+
+/* ── RESPONSIVE ── */
+@media(max-width:500px){
+  .login-header{padding:22px 20px 16px}
+  .login-body{padding:0 20px 16px}
+  .login-footer{padding:12px 20px 22px}
+  .tool-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN SCREEN ── -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-logo">
+        <svg viewBox="0 0 72 72" fill="none">
+          <path d="M36 4L8 16V38C8 53.2 20.4 65.4 36 68C51.6 65.4 64 53.2 64 38V16L36 4Z" fill="rgba(255,255,255,.06)"/>
+          <path d="M36 10L13 20.5V38C13 50.2 23.2 60.8 36 63.4C48.8 60.8 59 50.2 59 38V20.5L36 10Z" fill="none" stroke="#C8922A" stroke-width="1.5"/>
+          <path d="M24 37L31.5 45L48 28" stroke="#C8922A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="login-brand">Heyford <span>Compliance</span> Co.</div>
+      </div>
+      <div class="login-title">Staff Portal</div>
+      <div class="login-sub">Enter your access code to continue.</div>
+    </div>
+    <div class="login-body">
+      <div class="login-field">
+        <label class="login-label" for="pinInput">Access Code</label>
+        <input
+          class="login-input" id="pinInput"
+          type="password" inputmode="numeric"
+          placeholder="••••••"
+          maxlength="20"
+          autocomplete="current-password"
+          onkeydown="if(event.key==='Enter')checkPin()"
+        />
+        <div class="login-error" id="loginError">Incorrect access code. Try again.</div>
+      </div>
+    </div>
+    <div class="login-footer">
+      <button class="login-btn" onclick="checkPin()">Enter Portal →</button>
+      <div class="login-note">This page is not indexed by search engines.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PORTAL SCREEN ── -->
+<div id="portalScreen">
+  <div class="portal-header">
+    <div class="portal-brand">
+      <svg viewBox="0 0 72 72" fill="none">
+        <path d="M36 4L8 16V38C8 53.2 20.4 65.4 36 68C51.6 65.4 64 53.2 64 38V16L36 4Z" fill="rgba(255,255,255,.06)"/>
+        <path d="M36 10L13 20.5V38C13 50.2 23.2 60.8 36 63.4C48.8 60.8 59 50.2 59 38V20.5L36 10Z" fill="none" stroke="#C8922A" stroke-width="1.5"/>
+        <path d="M24 37L31.5 45L48 28" stroke="#C8922A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="portal-name">HCC <span>Portal</span></div>
+    </div>
+    <div class="portal-actions">
+      <span class="portal-date" id="portalDate"></span>
+      <button class="portal-btn" onclick="lockPortal()">🔒 Lock</button>
+    </div>
+  </div>
+
+  <div class="portal-main">
+    <div class="portal-inner">
+
+      <!-- Welcome -->
+      <div class="portal-welcome">
+        <div class="portal-greeting">Good <span id="timeOfDay">morning</span>, James.</div>
+        <div class="portal-sub">Heyford Compliance Co. — internal tools and visit management.</div>
+      </div>
+
+      <!-- Quick stats -->
+      <div class="stats-row" id="statsRow">
+        <div class="stat-card">
+          <div class="stat-num" id="statClients">—</div>
+          <div class="stat-label">Total Clients</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statSurveyed">—</div>
+          <div class="stat-label">Surveyed Sites</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statVisits">—</div>
+          <div class="stat-label">Visits Recorded</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statDue" style="color:var(--gold2)">—</div>
+          <div class="stat-label">Due This Month</div>
+        </div>
+      </div>
+
+      <!-- Tool cards -->
+      <div class="section-title">Tools</div>
+      <div class="tool-grid">
+        <a class="tool-card" href="survey.html">
+          <span class="tool-icon">📋</span>
+          <div class="tool-name">Site Survey</div>
+          <div class="tool-desc">Initial walk-around survey tool. Capture site details, equipment inventory, compliance status, and photos before starting the monthly service.</div>
+          <div class="tool-features">
+            <div class="tool-feature">All compliance areas — fire, water, PAT, electrical, facilities</div>
+            <div class="tool-feature">GPS-tagged photos per section</div>
+            <div class="tool-feature">Additional works flagging with priority</div>
+            <div class="tool-feature">Offline-first with Supabase sync</div>
+            <div class="tool-feature">Branded PDF export and email</div>
+          </div>
+          <div class="tool-cta">Open Survey Tool →</div>
+        </a>
+        <a class="tool-card" href="checklist.html">
+          <span class="tool-icon">✅</span>
+          <div class="tool-name">Monthly Visit</div>
+          <div class="tool-desc">Monthly compliance checklist. Pre-populated from your site survey. Capture Pass / Fail / Action results, temperature readings, quantities, and notes per check.</div>
+          <div class="tool-features">
+            <div class="tool-feature">Pass / Fail / Action per check item</div>
+            <div class="tool-feature">Live temperature pass/fail indicators</div>
+            <div class="tool-feature">Pre-populated from site survey data</div>
+            <div class="tool-feature">Full visit history per client</div>
+            <div class="tool-feature">Branded compliance report with sign-off</div>
+          </div>
+          <div class="tool-cta">Start Monthly Visit →</div>
+        </a>
+      </div>
+
+      <!-- Recent activity -->
+      <div class="section-title">Recent Activity</div>
+      <div class="recent-list" id="recentList">
+        <div class="empty-state">Loading recent activity...</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="portal-footer">
+    <p>Heyford Compliance Co. · Staff Portal · Not indexed</p>
+    <p>heyfordcompliance.co.uk</p>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────
+// Change this to your chosen access code
+// To update: change PIN_HASH below using: btoa(yourNewCode + 'hcc2024')
+// Default code is: HCC2024 (change it!)
+const PIN_HASH = btoa('HCC2024' + 'hcc_portal_salt');
+
+// ── AUTH ─────────────────────────────────────────────────────────
+function checkPin() {
+  const input = document.getElementById('pinInput').value;
+  const hash  = btoa(input + 'hcc_portal_salt');
+  if (hash === PIN_HASH) {
+    // Store session (clears on tab close)
+    sessionStorage.setItem('hcc_portal_auth', '1');
+    showPortal();
+  } else {
+    const err = document.getElementById('loginError');
+    err.classList.add('show');
+    document.getElementById('pinInput').value = '';
+    document.getElementById('pinInput').focus();
+    setTimeout(() => err.classList.remove('show'), 3000);
+  }
+}
+
+function lockPortal() {
+  sessionStorage.removeItem('hcc_portal_auth');
+  document.getElementById('portalScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display  = 'flex';
+  document.getElementById('pinInput').value = '';
+  document.getElementById('pinInput').focus();
+}
+
+function showPortal() {
+  document.getElementById('loginScreen').style.display  = 'none';
+  document.getElementById('portalScreen').style.display = 'flex';
+  initPortal();
+}
+
+// ── PORTAL INIT ───────────────────────────────────────────────────
+function initPortal() {
+  // Date & greeting
+  const now  = new Date();
+  const hour = now.getHours();
+  const tod  = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
+  document.getElementById('timeOfDay').textContent = tod;
+  document.getElementById('portalDate').textContent = now.toLocaleDateString('en-GB', {
+    weekday:'long', day:'numeric', month:'long'
+  });
+  // Load stats from IndexedDB
+  loadStats();
+}
+
+async function loadStats() {
+  try {
+    // Try to get data from Survey app's IndexedDB
+    const surveyDB = await openDB('HCCSurvey', 1);
+    const clients  = await getAllFromDB(surveyDB, 'clients');
+    const surveys  = await getAllFromDB(surveyDB, 'surveys');
+
+    // Try visit DB
+    const visitDB  = await openDB('HCCVisit', 1);
+    const visits   = await getAllFromDB(visitDB, 'visits');
+
+    // Stats
+    document.getElementById('statClients').textContent  = clients.length || '0';
+    document.getElementById('statSurveyed').textContent = surveys.length || '0';
+    document.getElementById('statVisits').textContent   = visits.length  || '0';
+    // Due this month = clients with survey but no visit this month
+    const thisMonth = new Date().toISOString().slice(0,7);
+    const visitedThisMonth = new Set(
+      visits.filter(v => v.date?.startsWith(thisMonth)).map(v => v.clientId)
+    );
+    const due = clients.filter(c => c.hasSurvey && !visitedThisMonth.has(c.id)).length;
+    document.getElementById('statDue').textContent = due;
+
+    // Recent activity
+    const recent = [];
+    // Last 3 surveys
+    const recentSurveys = [...surveys].sort((a,b)=>
+      (b.updated||'').localeCompare(a.updated||'')).slice(0,3);
+    recentSurveys.forEach(s => {
+      const client = clients.find(c=>c.id===s.clientId);
+      if (client) recent.push({
+        name: client.name, type:'survey',
+        meta: 'Survey · ' + formatDate(s.updated||s.date||''),
+        date: s.updated||''
+      });
+    });
+    // Last 3 visits
+    const recentVisits = [...visits].sort((a,b)=>
+      (b.date||'').localeCompare(a.date||'')).slice(0,3);
+    recentVisits.forEach(v => {
+      const client = clients.find(c=>c.id===v.clientId);
+      if (client) recent.push({
+        name: client.name, type:'visit',
+        meta: 'Visit · ' + formatDate(v.date||''),
+        date: v.date||''
+      });
+    });
+    // Sort by date, show top 5
+    recent.sort((a,b)=>b.date.localeCompare(a.date));
+    const top5 = recent.slice(0,5);
+
+    const list = document.getElementById('recentList');
+    if (!top5.length) {
+      list.innerHTML = '<div class="empty-state">No activity yet — add your first client in the Survey tool.</div>';
+    } else {
+      list.innerHTML = top5.map(r=>`
+        <div class="recent-item">
+          <div>
+            <div class="recent-name">${esc(r.name)}</div>
+            <div class="recent-meta">${esc(r.meta)}</div>
+          </div>
+          <span class="recent-badge ${r.type}">${r.type==='survey'?'📋 Survey':'✅ Visit'}</span>
+        </div>
+      `).join('');
+    }
+  } catch(e) {
+    // DBs don't exist yet — first time
+    document.getElementById('statClients').textContent  = '0';
+    document.getElementById('statSurveyed').textContent = '0';
+    document.getElementById('statVisits').textContent   = '0';
+    document.getElementById('statDue').textContent      = '0';
+    document.getElementById('recentList').innerHTML =
+      '<div class="empty-state">No data yet — start by adding a client in the Survey tool.</div>';
+  }
+}
+
+// ── INDEXEDDB HELPERS ─────────────────────────────────────────────
+function openDB(name, version) {
+  return new Promise((res,rej) => {
+    const req = indexedDB.open(name, version);
+    req.onsuccess  = e => res(e.target.result);
+    req.onerror    = e => rej(e.target.error);
+    req.onupgradeneeded = e => res(e.target.result);
+  });
+}
+function getAllFromDB(db, store) {
+  return new Promise((res) => {
+    try {
+      if (!db.objectStoreNames.contains(store)) { res([]); return; }
+      const tx  = db.transaction(store,'readonly');
+      const req = tx.objectStore(store).getAll();
+      req.onsuccess = e => res(e.target.result||[]);
+      req.onerror   = () => res([]);
+    } catch { res([]); }
+  });
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────
+function formatDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  } catch { return iso; }
+}
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────
+// Check for existing session
+if (sessionStorage.getItem('hcc_portal_auth') === '1') {
+  showPortal();
+} else {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('portalScreen').style.display = 'none';
+  setTimeout(() => document.getElementById('pinInput').focus(), 100);
+}
+
+// Enter key on pin input
+document.getElementById('pinInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkPin();
+});
+</script>
+</body>
+</html>
