@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#0D1F3C"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="HCC Survey"/>
+<title>HCC Site Survey</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0D1F3C;--navy2:#162B52;--navy3:#0A1828;
+  --gold:#C8922A;--gold2:#E0A83A;
+  --cream:#F7F4EE;--lg:#F2F4F7;--mg:#8A99B0;--dg:#D0D5DD;
+  --white:#FFFFFF;--green:#2A8A4A;--red:#C0392B;--amber:#E67E22;
+  --pad:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:'Barlow',sans-serif;background:var(--navy3);color:var(--navy2);-webkit-font-smoothing:antialiased}
+button{cursor:pointer;font-family:inherit;border:none}
+input,textarea,select{font-family:inherit}
+img{max-width:100%;display:block}
+
+/* ── APP SHELL ── */
+#app{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── TOP BAR ── */
+.topbar{background:var(--navy);border-bottom:2px solid var(--gold);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px;flex-shrink:0;position:relative;z-index:50}
+.topbar-logo{display:flex;align-items:center;gap:8px}
+.topbar-logo svg{width:22px;height:22px;flex-shrink:0}
+.topbar-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--white)}
+.topbar-name span{color:var(--gold)}
+.topbar-center{flex:1;text-align:center}
+.topbar-status{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--mg)}
+.topbar-actions{display:flex;gap:8px}
+.topbar-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--mg);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:5px 10px;border-radius:2px;transition:.15s}
+.topbar-btn:hover{background:rgba(255,255,255,.14);color:var(--white)}
+.topbar-btn.gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.topbar-btn.gold:hover{background:var(--gold2)}
+
+/* ── MAIN LAYOUT ── */
+.main{flex:1;display:flex;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:220px;background:var(--navy2);border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;transition:transform .25s}
+.sidebar-header{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-client{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.sidebar-name{font-size:14px;font-weight:600;color:var(--white);line-height:1.3}
+.sidebar-date{font-size:11px;color:var(--mg);margin-top:2px}
+.sidebar-sections{flex:1;overflow-y:auto;padding:8px 0}
+.sidebar-sections::-webkit-scrollbar{width:3px}
+.sidebar-sections::-webkit-scrollbar-track{background:transparent}
+.sidebar-sections::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.sec-btn{width:100%;text-align:left;padding:10px 16px;background:none;border:none;color:var(--mg);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:10px;transition:.15s;border-left:3px solid transparent}
+.sec-btn:hover{background:rgba(255,255,255,.05);color:var(--white)}
+.sec-btn.active{background:rgba(200,146,42,.1);color:var(--gold);border-left-color:var(--gold)}
+.sec-btn.done{color:var(--green)}
+.sec-btn.done .sec-dot{background:var(--green)}
+.sec-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;transition:.15s}
+.sec-btn.active .sec-dot{background:var(--gold)}
+.sidebar-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.08)}
+.progress-bar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:6px}
+.progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:.3s}
+.progress-label{font-size:10px;color:var(--mg);display:flex;justify-content:space-between}
+
+/* ── CONTENT AREA ── */
+.content{flex:1;overflow-y:auto;background:var(--lg)}
+.content::-webkit-scrollbar{width:4px}
+.content::-webkit-scrollbar-track{background:transparent}
+.content::-webkit-scrollbar-thumb{background:var(--dg);border-radius:2px}
+
+/* ── VIEWS ── */
+.view{display:none;animation:fadeIn .2s ease}
+.view.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ── CLIENT LIST VIEW ── */
+.clients-view{padding:24px}
+.view-header{margin-bottom:20px}
+.view-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:4px}
+.view-sub{font-size:13px;color:var(--mg)}
+.clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-bottom:20px}
+.client-card{background:var(--white);border:1px solid var(--dg);border-top:3px solid var(--dg);padding:16px;cursor:pointer;transition:.15s}
+.client-card:hover{border-top-color:var(--gold);box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.client-card.has-survey{border-top-color:var(--green)}
+.cc-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;color:var(--navy);margin-bottom:3px}
+.cc-type{font-size:11px;color:var(--mg);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.cc-meta{font-size:12px;color:var(--mg);line-height:1.6}
+.cc-badge{display:inline-block;font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-top:8px}
+.cc-badge.survey-done{background:rgba(42,138,74,.1);color:var(--green);border:1px solid rgba(42,138,74,.3)}
+.cc-badge.no-survey{background:var(--lg);color:var(--mg);border:1px solid var(--dg)}
+.add-client-btn{background:var(--navy);color:var(--white);border:2px dashed rgba(255,255,255,.2);padding:20px;width:100%;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:.15s}
+.add-client-btn:hover{background:var(--navy2);border-color:var(--gold);color:var(--gold)}
+
+/* ── NEW CLIENT MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,24,40,.85);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--white);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;border-top:3px solid var(--gold)}
+.modal-header{background:var(--navy);padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--white)}
+.modal-close{background:none;border:none;color:var(--mg);font-size:20px;cursor:pointer;padding:4px;line-height:1}
+.modal-close:hover{color:var(--white)}
+.modal-body{padding:20px}
+.modal-footer{padding:16px 20px;border-top:1px solid var(--dg);display:flex;gap:10px;justify-content:flex-end}
+
+/* ── FORM ELEMENTS ── */
+.field{margin-bottom:14px}
+.field-label{display:block;font-size:11px;font-weight:600;color:var(--mg);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.field-input,.field-select,.field-textarea{width:100%;border:1px solid var(--dg);background:var(--white);padding:8px 10px;font-size:13px;color:var(--navy);outline:none;border-radius:2px;transition:.15s}
+.field-input:focus,.field-select:focus,.field-textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(200,146,42,.15)}
+.field-textarea{min-height:70px;resize:vertical}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ── SURVEY VIEW ── */
+.survey-view{padding:0}
+.section-header{background:var(--navy);padding:16px 20px;border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:10}
+.section-header-top{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.section-icon{font-size:20px}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white)}
+.section-desc{font-size:12px;color:var(--mg)}
+.section-nav{display:flex;gap:8px;padding:10px 20px;background:var(--navy2);border-bottom:1px solid rgba(255,255,255,.08)}
+.sec-nav-btn{flex:1;padding:7px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.06);color:var(--mg);border:1px solid rgba(255,255,255,.1);border-radius:2px;cursor:pointer;transition:.15s;text-align:center}
+.sec-nav-btn:hover{background:rgba(255,255,255,.1);color:var(--white)}
+.sec-nav-btn.current{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.section-body{padding:20px}
+
+/* ── SURVEY BLOCKS ── */
+.survey-block{background:var(--white);border:1px solid var(--dg);margin-bottom:12px}
+.sb-head{background:var(--navy);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.sb-head-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
+.sb-head-toggle{font-size:16px;color:var(--mg);transition:.2s}
+.sb-body{padding:14px}
+.sb-collapsed .sb-body{display:none}
+.sb-collapsed .sb-head-toggle{transform:rotate(-90deg)}
+
+/* ── CHECK ROWS ── */
+.check-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--lg)}
+.check-row:last-child{border-bottom:none}
+.check-box{width:20px;height:20px;border:2px solid var(--dg);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:.15s;margin-top:1px}
+.check-box:hover{border-color:var(--gold)}
+.check-box.checked{background:var(--green);border-color:var(--green);color:var(--white)}
+.check-box.na{background:var(--mg);border-color:var(--mg);color:var(--white)}
+.check-content{flex:1}
+.check-label{font-size:13px;color:var(--navy);font-weight:500;margin-bottom:4px;line-height:1.4}
+.check-sub{font-size:11px;color:var(--mg);margin-bottom:6px}
+.check-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.status-select{font-size:11px;padding:3px 6px;border:1px solid var(--dg);background:var(--white);color:var(--navy);border-radius:2px;cursor:pointer}
+.status-select.pass{border-color:var(--green);color:var(--green)}
+.status-select.fail{border-color:var(--red);color:var(--red)}
+.status-select.action{border-color:var(--amber);color:var(--amber)}
+.qty-input{width:60px;font-size:12px;padding:3px 6px;border:1px solid var(--dg);border-radius:2px;text-align:center}
+.note-input{flex:1;min-width:120px;font-size:11px;padding:3px 8px;border:1px solid var(--dg);border-radius:2px;color:var(--navy)}
+.note-input:focus{outline:none;border-color:var(--gold)}
+
+/* ── CONDITION SELECTOR ── */
+.condition-row{display:flex;gap:4px;margin-top:4px}
+.cond-btn{padding:3px 8px;font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--dg);background:var(--lg);color:var(--mg);border-radius:2px;cursor:pointer;transition:.15s}
+.cond-btn:hover{border-color:var(--navy);color:var(--navy)}
+.cond-btn.sel-good{background:rgba(42,138,74,.15);border-color:var(--green);color:var(--green)}
+.cond-btn.sel-fair{background:rgba(230,126,34,.15);border-color:var(--amber);color:var(--amber)}
+.cond-btn.sel-poor{background:rgba(192,57,43,.15);border-color:var(--red);color:var(--red)}
+.cond-btn.sel-na{background:rgba(138,153,176,.15);border-color:var(--mg);color:var(--mg)}
+
+/* ── ADDITIONAL WORKS ── */
+.works-section{margin-top:16px;border-top:2px solid var(--gold);padding-top:14px}
+.works-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.works-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
+.works-check{width:18px;height:18px;border:2px solid var(--dg);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--white);flex-shrink:0;cursor:pointer;margin-top:2px;transition:.15s}
+.works-check:hover{border-color:var(--amber)}
+.works-check.flagged{background:var(--amber);border-color:var(--amber)}
+.works-label{font-size:12px;color:var(--navy2);line-height:1.5;flex:1}
+.works-priority{font-size:10px;padding:2px 6px;border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-left:auto;flex-shrink:0}
+.works-priority.high{background:rgba(192,57,43,.1);color:var(--red);border:1px solid rgba(192,57,43,.3)}
+.works-priority.med{background:rgba(230,126,34,.1);color:var(--amber);border:1px solid rgba(230,126,34,.3)}
+.works-priority.low{background:rgba(42,138,74,.1);color:var(--green);border:1px solid rgba(42,138,74,.3)}
+
+/* ── PHOTO SECTION ── */
+.photo-section{margin-top:14px}
+.photo-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);margin-bottom:8px}
+.photo-grid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.photo-thumb{width:72px;height:72px;object-fit:cover;border:2px solid var(--dg);border-radius:2px;position:relative}
+.photo-thumb-wrap{position:relative;display:inline-block}
+.photo-remove{position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:var(--red);color:var(--white);border-radius:50%;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;line-height:1}
+.photo-btn{display:flex;align-items:center;gap:6px;padding:7px 12px;background:var(--navy);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:.15s}
+.photo-btn:hover{background:var(--navy2)}
+input[type=file]{display:none}
+
+/* ── REPORT VIEW ── */
+.report-view{padding:24px;max-width:800px;margin:0 auto}
+.report-header{background:var(--navy);padding:24px;border-top:3px solid var(--gold);margin-bottom:3px}
+.report-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.report-co-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--white)}
+.report-co-name span{color:var(--gold)}
+.report-type{font-size:11px;color:var(--mg);letter-spacing:.2em;text-transform:uppercase;margin-top:2px}
+.report-client-row{display:flex;gap:24px;flex-wrap:wrap;margin-top:12px}
+.report-field{flex:1;min-width:160px}
+.report-field-label{font-size:10px;color:var(--mg);letter-spacing:.15em;text-transform:uppercase;margin-bottom:3px}
+.report-field-value{font-size:14px;color:var(--white);font-weight:600}
+.report-section{background:var(--white);border:1px solid var(--dg);margin-bottom:3px}
+.report-sec-header{background:var(--navy2);padding:10px 16px}
+.report-sec-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold2)}
+.report-table{width:100%;border-collapse:collapse}
+.report-table th{background:var(--navy);color:var(--white);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:7px 12px;text-align:left}
+.report-table td{padding:8px 12px;font-size:12px;border-bottom:1px solid var(--lg);color:var(--navy2)}
+.report-table tr:last-child td{border-bottom:none}
+.report-table tr:nth-child(even) td{background:var(--lg)}
+.status-badge{display:inline-block;font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:2px}
+.status-badge.pass{background:rgba(42,138,74,.12);color:var(--green);border:1px solid rgba(42,138,74,.3)}
+.status-badge.fail{background:rgba(192,57,43,.1);color:var(--red);border:1px solid rgba(192,57,43,.3)}
+.status-badge.action{background:rgba(230,126,34,.1);color:var(--amber);border:1px solid rgba(230,126,34,.3)}
+.status-badge.na{background:var(--lg);color:var(--mg);border:1px solid var(--dg)}
+.works-table-flag{color:var(--amber);font-weight:700}
+.report-footer{background:var(--navy3);padding:14px 20px;border-top:2px solid var(--gold);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--mg)}
+.report-actions{display:flex;gap:10px;margin-top:16px;margin-bottom:8px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:calc(24px + var(--pad));right:16px;background:var(--navy);border-left:3px solid var(--gold);color:var(--white);padding:10px 16px;font-size:12px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;z-index:999;opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;max-width:280px}
+.toast.show{opacity:1;transform:none}
+.toast.success{border-left-color:var(--green)}
+.toast.error{border-left-color:var(--red)}
+
+/* ── OFFLINE BANNER ── */
+.offline-banner{background:var(--amber);color:var(--white);text-align:center;padding:6px;font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.15em;text-transform:uppercase;display:none}
+.offline-banner.show{display:block}
+
+/* ── MOBILE SIDEBAR TOGGLE ── */
+.mob-sidebar-toggle{display:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--mg);padding:6px 8px;border-radius:2px;font-size:16px}
+@media(max-width:680px){
+  .sidebar{position:fixed;top:52px;left:0;bottom:0;z-index:40;transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .mob-sidebar-toggle{display:flex;align-items:center}
+  .content{width:100%}
+}
+
+/* ── SYNC INDICATOR ── */
+.sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:.3s}
+.sync-dot.synced{background:var(--green)}
+.sync-dot.syncing{background:var(--gold);animation:pulse .8s infinite}
+.sync-dot.error{background:var(--red)}
+.sync-dot.offline{background:var(--mg)}
+.sync-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--mg)}
+.sync-wrap{display:flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid rgba(255,255,255,.1);border-radius:2px;cursor:pointer}
+.sync-wrap:hover{background:rgba(255,255,255,.06)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* ── CONFIG SCREEN ── */
+.config-view{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 52px);background:var(--navy3)}
+.config-card{background:var(--white);width:100%;max-width:480px;margin:24px;border-top:3px solid var(--gold)}
+.config-header{background:var(--navy);padding:20px 24px}
+.config-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);margin-bottom:4px}
+.config-sub{font-size:12px;color:var(--mg)}
+.config-body{padding:24px}
+.config-footer{padding:16px 24px;border-top:1px solid var(--dg);display:flex;justify-content:flex-end;gap:10px}
+.config-note{font-size:11px;color:var(--mg);line-height:1.6;margin-top:12px;padding:10px 12px;background:var(--lg);border-left:3px solid var(--gold)}
+/* ── PRINT ── */
+@media print{
+  .topbar,.sidebar,.report-actions,.offline-banner,.toast{display:none!important}
+  .main{display:block}
+  .content{overflow:visible;height:auto}
+  .report-view{padding:0;max-width:100%}
+  body{background:white}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- OFFLINE BANNER -->
+<div class="offline-banner" id="offlineBanner">⚡ Offline — data saved locally</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <button class="mob-sidebar-toggle" id="mobToggle" onclick="toggleSidebar()">☰</button>
+  <div class="topbar-logo">
+    <svg viewBox="0 0 72 72" fill="none">
+      <path d="M36 4L8 16V38C8 53.2 20.4 65.4 36 68C51.6 65.4 64 53.2 64 38V16L36 4Z" fill="rgba(255,255,255,.06)"/>
+      <path d="M36 10L13 20.5V38C13 50.2 23.2 60.8 36 63.4C48.8 60.8 59 50.2 59 38V20.5L36 10Z" fill="none" stroke="#C8922A" stroke-width="1.5"/>
+      <path d="M24 37L31.5 45L48 28" stroke="#C8922A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="topbar-name">HCC <span>Survey</span></div>
+  </div>
+  <div class="topbar-center">
+    <div class="topbar-status" id="topbarStatus">Select a client to begin</div>
+  </div>
+  <div class="topbar-actions">
+    <div class="sync-wrap" onclick="showConfig()" title="Sync status — click to configure">
+      <div class="sync-dot offline" id="syncDot"></div>
+      <span class="sync-label" id="syncLabel">Offline</span>
+    </div>
+    <button class="topbar-btn" onclick="showClients()">Clients</button>
+    <button class="topbar-btn gold" id="saveBtn" onclick="saveCurrentSurvey()" style="display:none">Save</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-client">Current Survey</div>
+      <div class="sidebar-name" id="sidebarClientName">No client selected</div>
+      <div class="sidebar-date" id="sidebarDate"></div>
+    </div>
+    <div class="sidebar-sections" id="sidebarSections">
+      <!-- Populated by JS -->
+    </div>
+    <div class="sidebar-footer">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-label"><span>Progress</span><span id="progressText">0%</span></div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="contentArea">
+
+    <!-- CONFIG VIEW -->
+    <div class="view" id="view-config">
+      <div class="config-view">
+        <div class="config-card">
+          <div class="config-header">
+            <div class="config-title">Supabase Configuration</div>
+            <div class="config-sub">Enter your project credentials once — stored locally on this device only.</div>
+          </div>
+          <div class="config-body">
+            <div class="field">
+              <label class="field-label">Supabase Project URL</label>
+              <input class="field-input" id="cfg-url" type="url" placeholder="https://xxxxxxxxxxxx.supabase.co"/>
+            </div>
+            <div class="field">
+              <label class="field-label">Supabase Anon / Public Key</label>
+              <input class="field-input" id="cfg-key" type="password" placeholder="eyJ..."/>
+            </div>
+            <div class="field">
+              <label class="field-label">Your Email</label>
+              <input class="field-input" id="cfg-email" type="email" placeholder="james@heyfordcompliance.co.uk"/>
+            </div>
+            <div class="field">
+              <label class="field-label">Your Password</label>
+              <input class="field-input" id="cfg-pass" type="password" placeholder="Your Supabase auth password"/>
+            </div>
+            <div class="config-note">
+              Credentials are stored in this device's localStorage only. They are never sent anywhere except directly to your Supabase project. Your survey data is encrypted in transit and at rest in Supabase's EU (Ireland) data centre.
+            </div>
+          </div>
+          <div class="config-footer">
+            <button class="topbar-btn" onclick="showClients()">Cancel</button>
+            <button class="topbar-btn" onclick="clearConfig()" style="color:var(--red)">Clear</button>
+            <button class="topbar-btn gold" onclick="saveConfig()">Save & Connect</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENTS VIEW -->
+    <div class="view active" id="view-clients">
+      <div class="clients-view">
+        <div class="view-header">
+          <div class="view-title">Site Surveys</div>
+          <div class="view-sub">Select a client to continue a survey, or add a new one.</div>
+        </div>
+        <div class="clients-grid" id="clientsGrid"></div>
+        <button class="add-client-btn" onclick="showNewClientModal()">+ Add New Client / Site</button>
+      </div>
+    </div>
+
+    <!-- SURVEY VIEW -->
+    <div class="view" id="view-survey">
+      <div class="survey-view">
+        <div class="section-header" id="sectionHeader">
+          <div class="section-header-top">
+            <span class="section-icon" id="sectionIcon">🔥</span>
+            <div class="section-title" id="sectionTitle">Section</div>
+          </div>
+          <div class="section-desc" id="sectionDesc"></div>
+        </div>
+        <div class="section-nav" id="sectionNav"></div>
+        <div class="section-body" id="sectionBody"></div>
+      </div>
+    </div>
+
+    <!-- REPORT VIEW -->
+    <div class="view" id="view-report">
+      <div class="report-view" id="reportContent"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- NEW CLIENT MODAL -->
+<div class="modal-overlay" id="newClientModal" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Client / Site</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Business / Site Name *</label>
+          <input class="field-input" id="nc-name" placeholder="Acme Warehousing Ltd"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Site Type *</label>
+          <select class="field-select" id="nc-type">
+            <option value="">Select type</option>
+            <option>Warehouse / Industrial</option>
+            <option>Small Business</option>
+            <option>Landlord Property</option>
+            <option>Office</option>
+            <option>Retail</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Site Address</label>
+        <input class="field-input" id="nc-address" placeholder="Unit 4, Upper Heyford Industrial Estate, OX25 5HD"/>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Contact Name</label>
+          <input class="field-input" id="nc-contact" placeholder="John Smith"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Contact Phone</label>
+          <input class="field-input" id="nc-phone" placeholder="07XXX XXXXXX"/>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Contact Email</label>
+        <input class="field-input" id="nc-email" type="email" placeholder="john@example.com"/>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Plan Type</label>
+          <select class="field-select" id="nc-plan">
+            <option value="">TBC</option>
+            <option>Small Business Plan</option>
+            <option>Warehouse / Industrial Plan</option>
+            <option>Landlord Plan</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Approx Floor Area</label>
+          <input class="field-input" id="nc-area" placeholder="e.g. 500m²"/>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Notes</label>
+        <textarea class="field-textarea" id="nc-notes" placeholder="Any initial notes about the site..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="topbar-btn" onclick="closeModal()">Cancel</button>
+      <button class="topbar-btn gold" onclick="createClient()">Create & Start Survey</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA LAYER — IndexedDB
+// ═══════════════════════════════════════════════════════════════
+const DB_NAME = 'HCCSurvey';
+const DB_VER  = 1;
+let db = null;
+
+function initDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('clients'))
+        d.createObjectStore('clients', { keyPath: 'id' });
+      if (!d.objectStoreNames.contains('surveys'))
+        d.createObjectStore('surveys', { keyPath: 'clientId' });
+    };
+    req.onsuccess = e => { db = e.target.result; res(db); };
+    req.onerror   = e => rej(e.target.error);
+  });
+}
+
+function dbPut(store, data) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readwrite');
+    tx.objectStore(store).put(data).onsuccess = e => res(e.target.result);
+    tx.onerror = e => rej(e.target.error);
+  });
+}
+
+function dbGetAll(store) {
+  return new Promise((res, rej) => {
+    const tx  = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).getAll();
+    req.onsuccess = e => res(e.target.result);
+    req.onerror   = e => rej(e.target.error);
+  });
+}
+
+function dbGet(store, key) {
+  return new Promise((res, rej) => {
+    const tx  = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).get(key);
+    req.onsuccess = e => res(e.target.result);
+    req.onerror   = e => rej(e.target.error);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SURVEY SCHEMA
+// ═══════════════════════════════════════════════════════════════
+const SECTIONS = [
+  {
+    id: 'site', icon: '🏢', title: 'Site Details', desc: 'Basic site information and access notes',
+    blocks: [
+      { id: 'access', title: 'Access & General', items: [
+        { id: 'keyholder', label: 'Keyholder / out-of-hours contact confirmed', type: 'check' },
+        { id: 'access_notes', label: 'Access arrangements / restrictions', type: 'note' },
+        { id: 'hazards', label: 'Known site hazards', type: 'note' },
+        { id: 'floors', label: 'Number of floors / levels', type: 'qty' },
+        { id: 'occupants', label: 'Approximate number of occupants', type: 'qty' },
+        { id: 'hours', label: 'Site operating hours', type: 'note' },
+      ]},
+      { id: 'existing_docs', title: 'Existing Compliance Documentation', items: [
+        { id: 'fra', label: 'Fire Risk Assessment on site', type: 'check_status', options: ['Yes','No','Outdated'] },
+        { id: 'fra_date', label: 'FRA date (if present)', type: 'note' },
+        { id: 'asbestos', label: 'Asbestos register present', type: 'check_status', options: ['Yes','No','N/A'] },
+        { id: 'eicr', label: 'EICR in date', type: 'check_status', options: ['Yes','No','Unknown'] },
+        { id: 'gas_cert', label: 'Gas safety certificate in date', type: 'check_status', options: ['Yes','No','N/A'] },
+        { id: 'legionella_ra', label: 'Legionella risk assessment present', type: 'check_status', options: ['Yes','No','Unknown'] },
+        { id: 'prev_pat', label: 'Previous PAT records', type: 'check_status', options: ['Yes','No','Partial'] },
+        { id: 'logbook', label: 'Site maintenance logbook', type: 'check_status', options: ['Yes','No','None'] },
+      ]},
+    ]
+  },
+  {
+    id: 'fire', icon: '🔥', title: 'Fire Safety', desc: 'Fire detection, suppression, escape routes and equipment',
+    blocks: [
+      { id: 'detection', title: 'Fire Detection & Alarm', items: [
+        { id: 'alarm_present', label: 'Fire alarm system present', type: 'check' },
+        { id: 'alarm_type', label: 'Alarm system type', type: 'note', placeholder: 'e.g. Conventional, Addressable, Wireless' },
+        { id: 'alarm_panel', label: 'Panel location', type: 'note' },
+        { id: 'alarm_zones', label: 'Number of zones', type: 'qty' },
+        { id: 'call_points', label: 'Number of manual call points', type: 'qty' },
+        { id: 'detectors', label: 'Number of detectors (approx)', type: 'qty' },
+        { id: 'alarm_condition', label: 'System condition', type: 'condition' },
+        { id: 'alarm_last_service', label: 'Last service date', type: 'note' },
+        { id: 'alarm_faults', label: 'Any current faults / issues noted', type: 'note' },
+      ]},
+      { id: 'em_lighting', title: 'Emergency Lighting', items: [
+        { id: 'em_present', label: 'Emergency lighting installed', type: 'check' },
+        { id: 'em_qty', label: 'Number of luminaires (approx)', type: 'qty' },
+        { id: 'em_condition', label: 'Overall condition', type: 'condition' },
+        { id: 'em_last_test', label: 'Last tested', type: 'note' },
+        { id: 'em_issues', label: 'Failed / damaged units noted', type: 'note' },
+      ]},
+      { id: 'extinguishers', title: 'Fire Extinguishers', items: [
+        { id: 'ext_qty_co2', label: 'CO₂ extinguishers', type: 'qty' },
+        { id: 'ext_qty_water', label: 'Water extinguishers', type: 'qty' },
+        { id: 'ext_qty_foam', label: 'Foam extinguishers', type: 'qty' },
+        { id: 'ext_qty_powder', label: 'Dry powder extinguishers', type: 'qty' },
+        { id: 'ext_qty_other', label: 'Other types', type: 'note' },
+        { id: 'ext_condition', label: 'Overall condition', type: 'condition' },
+        { id: 'ext_last_service', label: 'Last service date', type: 'note' },
+        { id: 'ext_placement', label: 'Placement appropriate', type: 'check' },
+        { id: 'ext_signage', label: 'Signage in place', type: 'check' },
+      ]},
+      { id: 'fire_doors', title: 'Fire Doors', items: [
+        { id: 'fd_qty', label: 'Number of fire doors', type: 'qty' },
+        { id: 'fd_condition', label: 'Overall condition', type: 'condition' },
+        { id: 'fd_closers', label: 'Self-closers functioning', type: 'check_status', options: ['All','Most','Some','None'] },
+        { id: 'fd_seals', label: 'Intumescent seals present', type: 'check_status', options: ['All','Most','Some','None'] },
+        { id: 'fd_signage', label: 'Signage correct', type: 'check' },
+        { id: 'fd_issues', label: 'Issues / defects noted', type: 'note' },
+      ]},
+      { id: 'escape', title: 'Escape Routes & Signage', items: [
+        { id: 'escape_routes', label: 'Number of escape routes', type: 'qty' },
+        { id: 'escape_clear', label: 'All routes clear and unobstructed', type: 'check' },
+        { id: 'escape_signage', label: 'Emergency exit signage adequate', type: 'check' },
+        { id: 'escape_condition', label: 'Route condition', type: 'condition' },
+        { id: 'escape_issues', label: 'Issues noted', type: 'note' },
+      ]},
+    ],
+    works: [
+      { id: 'w_fire_alarm_service', label: 'Fire alarm service required', priority: 'high' },
+      { id: 'w_ext_service', label: 'Extinguisher service / replacement', priority: 'high' },
+      { id: 'w_em_replace', label: 'Emergency lighting unit replacement', priority: 'med' },
+      { id: 'w_fire_door_repair', label: 'Fire door repair / adjustment', priority: 'high' },
+      { id: 'w_fire_door_closer', label: 'Door closer replacement', priority: 'med' },
+      { id: 'w_fire_signage', label: 'Fire safety signage replacement', priority: 'low' },
+      { id: 'w_fra_required', label: 'Fire Risk Assessment required', priority: 'high' },
+    ]
+  },
+  {
+    id: 'water', icon: '💧', title: 'Water & Legionella', desc: 'Water system, Legionella risk points and hygiene',
+    blocks: [
+      { id: 'water_system', title: 'Water System Overview', items: [
+        { id: 'cold_storage', label: 'Cold water storage tank(s) present', type: 'check' },
+        { id: 'cold_tank_qty', label: 'Number of cold storage tanks', type: 'qty' },
+        { id: 'hot_system', label: 'Hot water system type', type: 'note', placeholder: 'e.g. Combi boiler, Calorifier, Point-of-use' },
+        { id: 'calorifier', label: 'Calorifier / hot water cylinder present', type: 'check' },
+        { id: 'showers', label: 'Number of showers / shower heads', type: 'qty' },
+        { id: 'spray_taps', label: 'Spray taps / aerators present', type: 'check' },
+        { id: 'dead_legs', label: 'Suspected dead legs / infrequent outlets', type: 'note' },
+        { id: 'tmvs', label: 'Thermostatic mixing valves (TMVs) present', type: 'check' },
+        { id: 'tmv_qty', label: 'Number of TMVs', type: 'qty' },
+      ]},
+      { id: 'legionella', title: 'Legionella Risk Assessment', items: [
+        { id: 'leg_ra', label: 'Legionella RA present on site', type: 'check_status', options: ['Yes','No','Unknown'] },
+        { id: 'leg_ra_date', label: 'RA date', type: 'note' },
+        { id: 'leg_log', label: 'Temperature monitoring log in place', type: 'check' },
+        { id: 'leg_risk_level', label: 'Assessed risk level', type: 'note', placeholder: 'Low / Medium / High' },
+        { id: 'leg_schematic', label: 'Water schematic / diagram available', type: 'check' },
+      ]},
+      { id: 'water_sentinel', title: 'Sentinel Outlets Identified', items: [
+        { id: 'sentinel_hot', label: 'Furthest hot water outlet(s)', type: 'note', placeholder: 'Location description' },
+        { id: 'sentinel_cold', label: 'Furthest cold water outlet(s)', type: 'note', placeholder: 'Location description' },
+        { id: 'infrequent', label: 'Infrequently used outlets identified', type: 'note' },
+      ]},
+    ],
+    works: [
+      { id: 'w_leg_ra', label: 'Legionella risk assessment required', priority: 'high' },
+      { id: 'w_leg_monitoring', label: 'Temperature monitoring programme to implement', priority: 'high' },
+      { id: 'w_tmv_service', label: 'TMV service / calibration required', priority: 'med' },
+      { id: 'w_showerhead_descale', label: 'Showerhead descale / replacement', priority: 'med' },
+      { id: 'w_dead_leg', label: 'Dead leg investigation / removal', priority: 'med' },
+      { id: 'w_tank_inspect', label: 'Cold water tank inspection', priority: 'med' },
+    ]
+  },
+  {
+    id: 'pat', icon: '⚡', title: 'PAT Testing', desc: 'Portable appliance inventory and test schedule planning',
+    blocks: [
+      { id: 'pat_inventory', title: 'Appliance Inventory', items: [
+        { id: 'pat_qty_class1', label: 'Class I appliances (earthed — kettles, microwaves, toasters)', type: 'qty' },
+        { id: 'pat_qty_class2', label: 'Class II appliances (double insulated — monitors, printers, fans)', type: 'qty' },
+        { id: 'pat_qty_ext', label: 'Extension leads / adapters', type: 'qty' },
+        { id: 'pat_qty_it', label: 'IT equipment (PCs, laptops, chargers)', type: 'qty' },
+        { id: 'pat_qty_power', label: 'Power tools / heavy equipment', type: 'qty' },
+        { id: 'pat_total', label: 'Estimated total appliances', type: 'qty' },
+        { id: 'pat_prev', label: 'Previous PAT certificates on site', type: 'check' },
+        { id: 'pat_prev_date', label: 'Previous PAT date', type: 'note' },
+        { id: 'pat_issues', label: 'Visible damage / concerns noted', type: 'note' },
+      ]},
+      { id: 'pat_schedule', title: 'Proposed Rolling Schedule', items: [
+        { id: 'pat_monthly_batch', label: 'Estimated items per monthly batch', type: 'qty' },
+        { id: 'pat_priority', label: 'Priority items for first visit', type: 'note', placeholder: 'e.g. power tools, extension leads, kitchen equipment' },
+        { id: 'pat_environment', label: 'Environment risk level', type: 'note', placeholder: 'Office / Commercial / Industrial / Wet / High-use' },
+      ]},
+    ],
+    works: [
+      { id: 'w_pat_urgent', label: 'Urgent PAT testing required (visible damage)', priority: 'high' },
+      { id: 'w_pat_full', label: 'Full site PAT testing recommended', priority: 'med' },
+      { id: 'w_pat_labels', label: 'Appliance labelling required', priority: 'low' },
+      { id: 'w_ext_lead_replace', label: 'Extension lead replacement', priority: 'med' },
+    ]
+  },
+  {
+    id: 'electrical', icon: '💡', title: 'Electrical & Lighting', desc: 'Distribution, consumer units, general lighting condition',
+    blocks: [
+      { id: 'distribution', title: 'Electrical Distribution', items: [
+        { id: 'consumer_units', label: 'Number of consumer units / DB boards', type: 'qty' },
+        { id: 'cu_location', label: 'Consumer unit location(s)', type: 'note' },
+        { id: 'cu_condition', label: 'Consumer unit condition', type: 'condition' },
+        { id: 'cu_labelled', label: 'Circuits correctly labelled', type: 'check' },
+        { id: 'eicr_date', label: 'EICR date (if known)', type: 'note' },
+        { id: 'eicr_due', label: 'EICR due date', type: 'note' },
+        { id: 'rcd_present', label: 'RCD protection present', type: 'check' },
+        { id: 'elec_issues', label: 'Visible electrical concerns', type: 'note' },
+      ]},
+      { id: 'lighting', title: 'General Lighting', items: [
+        { id: 'lighting_type', label: 'Lighting type(s)', type: 'note', placeholder: 'e.g. LED, Fluorescent, Mixed' },
+        { id: 'lighting_condition', label: 'Overall lighting condition', type: 'condition' },
+        { id: 'failed_lights', label: 'Failed / flickering luminaires noted', type: 'qty' },
+        { id: 'lighting_external', label: 'External lighting present', type: 'check' },
+        { id: 'ext_light_condition', label: 'External lighting condition', type: 'condition' },
+      ]},
+    ],
+    works: [
+      { id: 'w_eicr', label: 'EICR required', priority: 'high' },
+      { id: 'w_cu_label', label: 'Consumer unit labelling required', priority: 'med' },
+      { id: 'w_light_replace', label: 'Failed lighting replacement', priority: 'med' },
+      { id: 'w_elec_remedial', label: 'Electrical remedial works (specify in notes)', priority: 'high' },
+    ]
+  },
+  {
+    id: 'building', icon: '🏗️', title: 'Building Fabric & Facilities', desc: 'Fabric, welfare, storage, signage and general condition',
+    blocks: [
+      { id: 'fabric', title: 'Building Fabric', items: [
+        { id: 'roof_condition', label: 'Roof condition (if accessible / visible)', type: 'condition' },
+        { id: 'walls_condition', label: 'Internal walls / structure condition', type: 'condition' },
+        { id: 'floors_condition', label: 'Floor surfaces condition', type: 'condition' },
+        { id: 'trip_hazards', label: 'Trip / slip hazards identified', type: 'note' },
+        { id: 'loading', label: 'Loading bay / dock present', type: 'check' },
+        { id: 'mezzanine', label: 'Mezzanine / elevated areas', type: 'check' },
+        { id: 'asbestos_visible', label: 'Suspected asbestos containing materials visible', type: 'note' },
+      ]},
+      { id: 'welfare', title: 'Welfare Facilities', items: [
+        { id: 'toilets', label: 'Number of toilet facilities', type: 'qty' },
+        { id: 'toilet_condition', label: 'Toilet condition', type: 'condition' },
+        { id: 'kitchen', label: 'Kitchen / welfare area present', type: 'check' },
+        { id: 'kitchen_condition', label: 'Kitchen area condition', type: 'condition' },
+        { id: 'first_aid', label: 'First aid kit present and stocked', type: 'check_status', options: ['Yes','No','Partial'] },
+        { id: 'first_aid_loc', label: 'First aid kit location', type: 'note' },
+        { id: 'first_aid_person', label: 'Appointed first aider on site', type: 'check' },
+      ]},
+      { id: 'storage', title: 'Storage & COSHH', items: [
+        { id: 'coshh_present', label: 'COSHH substances on site', type: 'check' },
+        { id: 'coshh_stored', label: 'COSHH correctly stored', type: 'check' },
+        { id: 'coshh_labelled', label: 'All substances labelled', type: 'check' },
+        { id: 'coshh_msds', label: 'MSDS/SDS sheets available', type: 'check' },
+        { id: 'waste', label: 'Waste storage adequate', type: 'check' },
+        { id: 'storage_issues', label: 'Storage concerns noted', type: 'note' },
+      ]},
+      { id: 'signage', title: 'General Safety Signage', items: [
+        { id: 'mandatory_signs', label: 'Mandatory signage in place (PPE, no smoking etc)', type: 'check' },
+        { id: 'warning_signs', label: 'Warning signs appropriate', type: 'check' },
+        { id: 'first_aid_signs', label: 'First aid signage present', type: 'check' },
+        { id: 'signage_issues', label: 'Missing / damaged signage noted', type: 'note' },
+      ]},
+    ],
+    works: [
+      { id: 'w_floor_repair', label: 'Floor surface repair / trip hazard', priority: 'high' },
+      { id: 'w_first_aid_restock', label: 'First aid kit restock', priority: 'med' },
+      { id: 'w_coshh_storage', label: 'COSHH storage improvement', priority: 'high' },
+      { id: 'w_signage_replace', label: 'Safety signage replacement / addition', priority: 'med' },
+      { id: 'w_asbestos_survey', label: 'Asbestos management survey required', priority: 'high' },
+      { id: 'w_welfare_repair', label: 'Welfare facility repair', priority: 'med' },
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// APP STATE
+// ═══════════════════════════════════════════════════════════════
+let state = {
+  clients: [],
+  currentClient: null,
+  currentSurvey: {},
+  currentSection: 0,
+  surveyDate: new Date().toISOString(),
+};
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+async function init() {
+  await initDB();
+  state.clients = await dbGetAll('clients');
+  // Merge in any remote clients if online
+  renderClients();
+  buildSidebar();
+  registerSW();
+  setupOfflineDetection();
+  // Init Supabase after short delay to not block UI
+  setTimeout(() => SB.init(), 500);
+}
+
+function registerSW() {
+  if ('serviceWorker' in navigator) {
+    // Inline SW for offline caching
+    const swCode = `
+const CACHE = 'hcc-survey-v1';
+const ASSETS = [location.href];
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+});
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(r => r || fetch(e.request).catch(() => caches.match(e.request)))
+  );
+});`;
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const swURL = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swURL).catch(() => {});
+  }
+}
+
+function setupOfflineDetection() {
+  const banner = document.getElementById('offlineBanner');
+  const update = () => { banner.classList.toggle('show', !navigator.onLine); };
+  window.addEventListener('online',  update);
+  window.addEventListener('offline', update);
+  update();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+}
+
+function showClients() {
+  showView('clients');
+  document.getElementById('saveBtn').style.display = 'none';
+  document.getElementById('topbarStatus').textContent = 'Select a client to begin';
+  state.currentClient = null;
+  closeSidebarMob();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+function closeSidebarMob() {
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CLIENTS
+// ═══════════════════════════════════════════════════════════════
+function renderClients() {
+  const grid = document.getElementById('clientsGrid');
+  if (!state.clients.length) {
+    grid.innerHTML = '<div style="color:var(--mg);font-size:13px;padding:8px 0;grid-column:1/-1">No clients yet — add your first site below.</div>';
+    return;
+  }
+  grid.innerHTML = state.clients.map(c => `
+    <div class="client-card ${c.hasSurvey ? 'has-survey' : ''}" onclick="openClient('${c.id}')">
+      <div class="cc-name">${c.name}</div>
+      <div class="cc-type">${c.type || 'Site'}</div>
+      <div class="cc-meta">
+        ${c.address ? c.address + '<br>' : ''}
+        ${c.contact ? c.contact : ''}
+        ${c.phone ? ' · ' + c.phone : ''}
+      </div>
+      <span class="cc-badge ${c.hasSurvey ? 'survey-done' : 'no-survey'}">
+        ${c.hasSurvey ? '✓ Survey Complete' : 'Survey Pending'}
+      </span>
+    </div>
+  `).join('');
+}
+
+function showNewClientModal() {
+  document.getElementById('newClientModal').style.display = 'flex';
+  document.getElementById('nc-name').focus();
+}
+function closeModal() {
+  document.getElementById('newClientModal').style.display = 'none';
+}
+
+async function createClient() {
+  const name = document.getElementById('nc-name').value.trim();
+  if (!name) { toast('Client name is required', 'error'); return; }
+  const client = {
+    id: 'c_' + Date.now(),
+    name,
+    type:    document.getElementById('nc-type').value,
+    address: document.getElementById('nc-address').value,
+    contact: document.getElementById('nc-contact').value,
+    phone:   document.getElementById('nc-phone').value,
+    email:   document.getElementById('nc-email').value,
+    plan:    document.getElementById('nc-plan').value,
+    area:    document.getElementById('nc-area').value,
+    notes:   document.getElementById('nc-notes').value,
+    created: new Date().toISOString(),
+    hasSurvey: false,
+  };
+  // Save locally
+  await dbPut('clients', client);
+  state.clients.push(client);
+  renderClients();
+  closeModal();
+  // Sync to Supabase
+  SB.upsert('clients', {
+    id: client.id, name: client.name, type: client.type,
+    address: client.address, contact: client.contact,
+    phone: client.phone, email: client.email,
+    plan: client.plan, area: client.area, notes: client.notes,
+    has_survey: false, created: client.created,
+    updated: client.created
+  });
+  openClient(client.id);
+  toast('Client created', 'success');
+}
+
+async function openClient(id) {
+  const client = state.clients.find(c => c.id === id);
+  if (!client) return;
+  state.currentClient = client;
+  state.currentSection = 0;
+  // Load existing survey or start fresh
+  const existing = await dbGet('surveys', id);
+  state.currentSurvey = existing ? existing.data : {};
+  state.surveyDate = existing ? existing.date : new Date().toISOString();
+  // Update UI
+  document.getElementById('sidebarClientName').textContent = client.name;
+  document.getElementById('sidebarDate').textContent = formatDate(state.surveyDate);
+  document.getElementById('topbarStatus').textContent = client.name;
+  document.getElementById('saveBtn').style.display = '';
+  updateSidebarProgress();
+  renderSection(0);
+  showView('survey');
+  closeSidebarMob();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════════════════════════
+function buildSidebar() {
+  const container = document.getElementById('sidebarSections');
+  container.innerHTML = SECTIONS.map((sec, i) => `
+    <button class="sec-btn" id="sidebar-sec-${i}" onclick="renderSection(${i})">
+      <span class="sec-dot"></span>
+      ${sec.icon} ${sec.title}
+    </button>
+  `).join('') + `
+    <button class="sec-btn" id="sidebar-sec-report" onclick="showReport()" style="margin-top:8px;border-top:1px solid rgba(255,255,255,.08)">
+      <span class="sec-dot"></span>
+      📄 View Report
+    </button>
+  `;
+}
+
+function updateSidebarProgress() {
+  // Count completed items
+  let total = 0, done = 0;
+  SECTIONS.forEach(sec => {
+    sec.blocks.forEach(block => {
+      block.items.forEach(item => {
+        total++;
+        const val = getSurveyVal(sec.id, block.id, item.id);
+        if (val && val !== '' && val !== null) done++;
+      });
+    });
+  });
+  const pct = total ? Math.round((done/total)*100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '%';
+  // Update dots
+  SECTIONS.forEach((sec, i) => {
+    const btn = document.getElementById(`sidebar-sec-${i}`);
+    if (!btn) return;
+    let secDone = 0, secTotal = 0;
+    sec.blocks.forEach(block => {
+      block.items.forEach(item => {
+        secTotal++;
+        const val = getSurveyVal(sec.id, block.id, item.id);
+        if (val && val !== '') secDone++;
+      });
+    });
+    btn.classList.toggle('done', secDone > 0 && secDone === secTotal);
+    btn.classList.toggle('active', i === state.currentSection);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SURVEY RENDERING
+// ═══════════════════════════════════════════════════════════════
+function renderSection(idx) {
+  state.currentSection = idx;
+  const sec = SECTIONS[idx];
+  document.getElementById('sectionIcon').textContent  = sec.icon;
+  document.getElementById('sectionTitle').textContent = sec.title;
+  document.getElementById('sectionDesc').textContent  = sec.desc;
+  // Nav
+  const nav = document.getElementById('sectionNav');
+  nav.innerHTML = SECTIONS.map((s, i) => `
+    <button class="sec-nav-btn ${i === idx ? 'current' : ''}" onclick="renderSection(${i})">${s.icon}</button>
+  `).join('') + `<button class="sec-nav-btn" onclick="showReport()">📄</button>`;
+  // Body
+  const body = document.getElementById('sectionBody');
+  body.innerHTML = '';
+  sec.blocks.forEach(block => {
+    body.appendChild(renderBlock(sec, block));
+  });
+  // Additional works
+  if (sec.works) {
+    body.appendChild(renderWorks(sec));
+  }
+  // Photos
+  body.appendChild(renderPhotos(sec));
+  // Sidebar highlight
+  document.querySelectorAll('.sec-btn').forEach((b,i) => {
+    b.classList.toggle('active', i === idx);
+  });
+  // Scroll top
+  document.getElementById('contentArea').scrollTop = 0;
+}
+
+function renderBlock(sec, block) {
+  const wrap = document.createElement('div');
+  wrap.className = 'survey-block';
+  wrap.innerHTML = `
+    <div class="sb-head" onclick="this.parentElement.classList.toggle('sb-collapsed')">
+      <div class="sb-head-title">${block.title}</div>
+      <span class="sb-head-toggle">▼</span>
+    </div>
+    <div class="sb-body"></div>
+  `;
+  const body = wrap.querySelector('.sb-body');
+  block.items.forEach(item => {
+    body.appendChild(renderItem(sec, block, item));
+  });
+  return wrap;
+}
+
+function renderItem(sec, block, item) {
+  const row = document.createElement('div');
+  row.className = 'check-row';
+  const val = getSurveyVal(sec.id, block.id, item.id);
+
+  let inner = `<div class="check-content"><div class="check-label">${item.label}</div>`;
+  if (item.sub) inner += `<div class="check-sub">${item.sub}</div>`;
+  inner += `<div class="check-meta">`;
+
+  if (item.type === 'check') {
+    const checked = val === true || val === 'true';
+    row.innerHTML = `
+      <div class="check-box ${checked ? 'checked' : ''}" onclick="toggleCheck(this,'${sec.id}','${block.id}','${item.id}')">
+        ${checked ? '✓' : ''}
+      </div>
+      <div class="check-content"><div class="check-label">${item.label}</div></div>
+    `;
+    return row;
+  }
+
+  if (item.type === 'check_status') {
+    const opts = item.options || ['Yes','No','N/A'];
+    inner += opts.map(o => `
+      <button class="cond-btn ${val === o ? 'sel-good' : ''}" 
+        onclick="setSurveyVal('${sec.id}','${block.id}','${item.id}','${o}');updateCondBtns(this,'${o}')"
+      >${o}</button>
+    `).join('');
+  }
+
+  if (item.type === 'condition') {
+    const conds = ['Good','Fair','Poor','N/A'];
+    inner += conds.map(c => `
+      <button class="cond-btn ${getCondClass(val,c)}"
+        onclick="setSurveyVal('${sec.id}','${block.id}','${item.id}','${c}');updateCondBtns(this,'${c}')"
+      >${c}</button>
+    `).join('');
+  }
+
+  if (item.type === 'qty') {
+    inner += `<input class="qty-input" type="number" min="0" value="${val || ''}" 
+      placeholder="0" onchange="setSurveyVal('${sec.id}','${block.id}','${item.id}',this.value)"/>`;
+  }
+
+  if (item.type === 'note') {
+    inner += `<input class="note-input" type="text" value="${escHtml(val || '')}" 
+      placeholder="${item.placeholder || 'Notes...'}"
+      onchange="setSurveyVal('${sec.id}','${block.id}','${item.id}',this.value)"/>`;
+  }
+
+  inner += `</div></div>`;
+  row.innerHTML = inner;
+  return row;
+}
+
+function getCondClass(val, cond) {
+  if (val !== cond) return '';
+  if (cond === 'Good') return 'sel-good';
+  if (cond === 'Fair') return 'sel-fair';
+  if (cond === 'Poor') return 'sel-poor';
+  return 'sel-na';
+}
+
+function updateCondBtns(clickedBtn, val) {
+  const siblings = clickedBtn.parentElement.querySelectorAll('.cond-btn');
+  siblings.forEach(b => {
+    b.className = 'cond-btn';
+    if (b.textContent.trim() === val) {
+      if (val === 'Good' || val === 'Yes') b.classList.add('sel-good');
+      else if (val === 'Fair') b.classList.add('sel-fair');
+      else if (val === 'Poor' || val === 'No') b.classList.add('sel-poor');
+      else b.classList.add('sel-na');
+    }
+  });
+}
+
+function toggleCheck(el, secId, blockId, itemId) {
+  const checked = el.classList.contains('checked');
+  el.classList.toggle('checked', !checked);
+  el.innerHTML = !checked ? '✓' : '';
+  setSurveyVal(secId, blockId, itemId, !checked);
+}
+
+function renderWorks(sec) {
+  const wrap = document.createElement('div');
+  wrap.className = 'survey-block';
+  wrap.innerHTML = `
+    <div class="sb-head" onclick="this.parentElement.classList.toggle('sb-collapsed')">
+      <div class="sb-head-title">⚠ Additional Works Required</div>
+      <span class="sb-head-toggle">▼</span>
+    </div>
+    <div class="sb-body">
+      <div class="works-section">
+        <div class="works-title">Flag any additional works identified during this survey</div>
+        ${sec.works.map(w => {
+          const flagged = getSurveyVal(sec.id, 'works', w.id) === true;
+          return `
+            <div class="works-item">
+              <div class="works-check ${flagged ? 'flagged' : ''}" 
+                onclick="toggleWork(this,'${sec.id}','${w.id}')">
+                ${flagged ? '!' : ''}
+              </div>
+              <div class="works-label">${w.label}</div>
+              <span class="works-priority ${w.priority}">${w.priority.toUpperCase()}</span>
+            </div>
+          `;
+        }).join('')}
+        <div style="margin-top:10px">
+          <label class="field-label" style="font-size:10px">Additional notes / custom works</label>
+          <textarea class="field-textarea" style="font-size:12px;min-height:60px" 
+            placeholder="Describe any additional works not listed above..."
+            onchange="setSurveyVal('${sec.id}','works','custom_notes',this.value)"
+          >${escHtml(getSurveyVal(sec.id,'works','custom_notes') || '')}</textarea>
+        </div>
+      </div>
+    </div>
+  `;
+  return wrap;
+}
+
+function toggleWork(el, secId, workId) {
+  const flagged = el.classList.contains('flagged');
+  el.classList.toggle('flagged', !flagged);
+  el.innerHTML = !flagged ? '!' : '';
+  setSurveyVal(secId, 'works', workId, !flagged);
+}
+
+function renderPhotos(sec) {
+  const key = `photos_${sec.id}`;
+  const photos = state.currentSurvey[key] || [];
+  const wrap = document.createElement('div');
+  wrap.className = 'survey-block';
+  wrap.id = `photo-block-${sec.id}`;
+  wrap.innerHTML = `
+    <div class="sb-head" onclick="this.parentElement.classList.toggle('sb-collapsed')">
+      <div class="sb-head-title">📷 Photos — ${sec.title}</div>
+      <span class="sb-head-toggle">▼</span>
+    </div>
+    <div class="sb-body">
+      <div class="photo-section">
+        <div class="photo-grid" id="photo-grid-${sec.id}">
+          ${photos.map((p, i) => `
+            <div class="photo-thumb-wrap">
+              <img class="photo-thumb" src="${p.data}" title="${p.timestamp}&#10;${p.location || ''}"/>
+              <button class="photo-remove" onclick="removePhoto('${sec.id}',${i})">✕</button>
+            </div>
+          `).join('')}
+        </div>
+        <button class="photo-btn" onclick="document.getElementById('photo-input-${sec.id}').click()">
+          📷 Take / Add Photo
+        </button>
+        <input type="file" id="photo-input-${sec.id}" accept="image/*" capture="environment"
+          onchange="handlePhoto(event,'${sec.id}')"/>
+        <div style="font-size:10px;color:var(--mg);margin-top:6px">
+          Photos are automatically tagged with timestamp and GPS location when available.
+        </div>
+      </div>
+    </div>
+  `;
+  return wrap;
+}
+
+function handlePhoto(event, secId) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const timestamp = new Date().toLocaleString('en-GB');
+    const photoData = { data: e.target.result, timestamp, location: null };
+    // Try geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        photoData.location = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
+        addPhoto(secId, photoData);
+      }, () => addPhoto(secId, photoData), { timeout: 5000 });
+    } else {
+      addPhoto(secId, photoData);
+    }
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function addPhoto(secId, photoData) {
+  const key = `photos_${secId}`;
+  if (!state.currentSurvey[key]) state.currentSurvey[key] = [];
+  state.currentSurvey[key].push(photoData);
+  // Re-render photo grid
+  const grid = document.getElementById(`photo-grid-${secId}`);
+  if (grid) {
+    grid.innerHTML = state.currentSurvey[key].map((p, i) => `
+      <div class="photo-thumb-wrap">
+        <img class="photo-thumb" src="${p.data}" title="${p.timestamp}"/>
+        <button class="photo-remove" onclick="removePhoto('${secId}',${i})">✕</button>
+      </div>
+    `).join('');
+  }
+  autoSave();
+  toast('Photo added', 'success');
+}
+
+function removePhoto(secId, idx) {
+  const key = `photos_${secId}`;
+  state.currentSurvey[key].splice(idx, 1);
+  const grid = document.getElementById(`photo-grid-${secId}`);
+  if (grid) {
+    grid.innerHTML = state.currentSurvey[key].map((p, i) => `
+      <div class="photo-thumb-wrap">
+        <img class="photo-thumb" src="${p.data}" title="${p.timestamp}"/>
+        <button class="photo-remove" onclick="removePhoto('${secId}',${i})">✕</button>
+      </div>
+    `).join('');
+  }
+  autoSave();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATE MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+function getSurveyVal(secId, blockId, itemId) {
+  return state.currentSurvey[`${secId}_${blockId}_${itemId}`] ?? null;
+}
+
+function setSurveyVal(secId, blockId, itemId, val) {
+  state.currentSurvey[`${secId}_${blockId}_${itemId}`] = val;
+  updateSidebarProgress();
+  autoSave();
+}
+
+let autoSaveTimer = null;
+function autoSave() {
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(saveCurrentSurvey, 1500);
+}
+
+async function saveCurrentSurvey() {
+  if (!state.currentClient) return;
+  // Save locally first — always works offline
+  await dbPut('surveys', {
+    clientId: state.currentClient.id,
+    data: state.currentSurvey,
+    date: state.surveyDate,
+    updated: new Date().toISOString(),
+  });
+  // Mark client as having survey
+  state.currentClient.hasSurvey = true;
+  await dbPut('clients', state.currentClient);
+  const idx = state.clients.findIndex(c => c.id === state.currentClient.id);
+  if (idx >= 0) state.clients[idx] = state.currentClient;
+  toast('Saved locally', 'success');
+  // Sync to Supabase (queues if offline)
+  const c = state.currentClient;
+  SB.upsert('clients', {
+    id: c.id, name: c.name, type: c.type, address: c.address,
+    contact: c.contact, phone: c.phone, email: c.email,
+    plan: c.plan, area: c.area, notes: c.notes,
+    has_survey: true, created: c.created,
+    updated: new Date().toISOString()
+  });
+  SB.upsert('surveys', {
+    client_id: c.id,
+    data: state.currentSurvey,
+    survey_date: state.surveyDate,
+    updated: new Date().toISOString()
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// REPORT GENERATION
+// ═══════════════════════════════════════════════════════════════
+function showReport() {
+  if (!state.currentClient) { toast('No client selected', 'error'); return; }
+  const html = generateReport();
+  document.getElementById('reportContent').innerHTML = html;
+  showView('report');
+  document.getElementById('contentArea').scrollTop = 0;
+}
+
+function generateReport() {
+  const c = state.currentClient;
+  const d = state.currentSurvey;
+  const date = formatDate(state.surveyDate);
+
+  // Count flagged works
+  let flaggedWorks = [];
+  SECTIONS.forEach(sec => {
+    if (sec.works) {
+      sec.works.forEach(w => {
+        if (getSurveyVal(sec.id, 'works', w.id) === true) {
+          flaggedWorks.push({ section: sec.title, label: w.label, priority: w.priority });
+        }
+      });
+    }
+  });
+
+  let html = `
+    <div class="report-actions">
+      <button class="topbar-btn gold" onclick="window.print()">🖨 Print / Save PDF</button>
+      <button class="topbar-btn" onclick="emailReport()">✉ Email Report</button>
+      <button class="topbar-btn" onclick="renderSection(0);showView('survey')">← Back to Survey</button>
+    </div>
+    <div class="report-header">
+      <div class="report-logo-row">
+        <svg width="28" height="28" viewBox="0 0 72 72" fill="none">
+          <path d="M36 4L8 16V38C8 53.2 20.4 65.4 36 68C51.6 65.4 64 53.2 64 38V16L36 4Z" fill="rgba(255,255,255,.06)"/>
+          <path d="M36 10L13 20.5V38C13 50.2 23.2 60.8 36 63.4C48.8 60.8 59 50.2 59 38V20.5L36 10Z" stroke="#C8922A" stroke-width="1.5" fill="none"/>
+          <path d="M24 37L31.5 45L48 28" stroke="#C8922A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <div class="report-co-name">Heyford <span>Compliance</span> Co.</div>
+          <div class="report-type">Initial Site Survey Report</div>
+        </div>
+      </div>
+      <div class="report-client-row">
+        <div class="report-field">
+          <div class="report-field-label">Client</div>
+          <div class="report-field-value">${escHtml(c.name)}</div>
+        </div>
+        <div class="report-field">
+          <div class="report-field-label">Site Type</div>
+          <div class="report-field-value">${escHtml(c.type || '—')}</div>
+        </div>
+        <div class="report-field">
+          <div class="report-field-label">Survey Date</div>
+          <div class="report-field-value">${date}</div>
+        </div>
+        <div class="report-field">
+          <div class="report-field-label">Technician</div>
+          <div class="report-field-value">James Gilbert</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Flagged works summary
+  if (flaggedWorks.length) {
+    html += `
+      <div class="report-section">
+        <div class="report-sec-header"><div class="report-sec-title">⚠ Additional Works Summary</div></div>
+        <table class="report-table">
+          <tr><th>Section</th><th>Work Required</th><th>Priority</th></tr>
+          ${flaggedWorks.map(w => `
+            <tr>
+              <td>${w.section}</td>
+              <td>${w.label}</td>
+              <td><span class="status-badge ${w.priority === 'high' ? 'fail' : w.priority === 'med' ? 'action' : 'pass'}">${w.priority.toUpperCase()}</span></td>
+            </tr>
+          `).join('')}
+        </table>
+      </div>
+    `;
+  }
+
+  // Section details
+  SECTIONS.forEach(sec => {
+    html += `
+      <div class="report-section">
+        <div class="report-sec-header">
+          <div class="report-sec-title">${sec.icon} ${sec.title}</div>
+        </div>
+    `;
+    sec.blocks.forEach(block => {
+      const rows = block.items.map(item => {
+        const val = getSurveyVal(sec.id, block.id, item.id);
+        if (!val && val !== 0 && val !== false) return '';
+        const display = val === true ? '✓ Yes' : val === false ? '✗ No' : escHtml(String(val));
+        return `<tr><td>${item.label}</td><td>${display}</td></tr>`;
+      }).filter(Boolean).join('');
+      if (!rows) return;
+      html += `
+        <table class="report-table">
+          <tr><th colspan="2">${block.title}</th></tr>
+          ${rows}
+        </table>
+      `;
+    });
+    // Custom works notes
+    const customNotes = getSurveyVal(sec.id, 'works', 'custom_notes');
+    if (customNotes) {
+      html += `<div style="padding:10px 14px;font-size:12px;color:var(--navy2);background:var(--cream);border-top:1px solid var(--dg)"><strong>Additional Notes:</strong> ${escHtml(customNotes)}</div>`;
+    }
+    // Photos
+    const photos = state.currentSurvey[`photos_${sec.id}`] || [];
+    if (photos.length) {
+      html += `<div style="padding:12px 14px;border-top:1px solid var(--dg)">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--mg);margin-bottom:8px">Photos</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${photos.map(p => `
+            <div style="text-align:center">
+              <img src="${p.data}" style="width:100px;height:100px;object-fit:cover;border:1px solid var(--dg)"/>
+              <div style="font-size:9px;color:var(--mg);margin-top:3px">${p.timestamp}${p.location ? '<br>' + p.location : ''}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+    }
+    html += `</div>`;
+  });
+
+  html += `
+    <div class="report-footer">
+      <span>Heyford Compliance Co. · heyfordcompliance.co.uk · 07930 057731</span>
+      <span>james&#64;heyfordcompliance.co.uk</span>
+    </div>
+    <div class="report-actions" style="margin-top:12px">
+      <button class="topbar-btn gold" onclick="window.print()">🖨 Print / Save PDF</button>
+      <button class="topbar-btn" onclick="emailReport()">✉ Email Report</button>
+    </div>
+  `;
+  return html;
+}
+
+function emailReport() {
+  const c = state.currentClient;
+  if (!c) return;
+  const subject = encodeURIComponent(`Initial Site Survey — ${c.name} — ${formatDate(state.surveyDate)}`);
+  const body = encodeURIComponent(
+    `Please find attached the initial site survey report for ${c.name}.\n\n` +
+    `Survey Date: ${formatDate(state.surveyDate)}\n` +
+    `Technician: James Gilbert\n` +
+    `Heyford Compliance Co.\n\n` +
+    `To view the full report, open the survey app and go to View Report, then print/save as PDF to attach.`
+  );
+  window.location.href = `mailto:${c.email || ''}?subject=${subject}&body=${body}`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════════
+function formatDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  } catch { return iso; }
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type} show`;
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' && e.ctrlKey && state.currentClient) {
+    const next = Math.min(state.currentSection + 1, SECTIONS.length - 1);
+    renderSection(next);
+  }
+  if (e.key === 'ArrowLeft' && e.ctrlKey && state.currentClient) {
+    const prev = Math.max(state.currentSection - 1, 0);
+    renderSection(prev);
+  }
+  if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    saveCurrentSurvey();
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// SUPABASE SYNC ENGINE
+// ═══════════════════════════════════════════════════════════════
+const SB = {
+  url:     null,
+  key:     null,
+  token:   null,
+  ready:   false,
+  syncing: false,
+  queue:   [], // pending sync items when offline
+
+  init() {
+    this.url = localStorage.getItem('sb_url');
+    this.key = localStorage.getItem('sb_key');
+    const token = localStorage.getItem('sb_token');
+    const expiry = localStorage.getItem('sb_token_expiry');
+    if (token && expiry && Date.now() < parseInt(expiry)) {
+      this.token = token;
+      this.ready = true;
+      setSyncStatus('synced', 'Synced');
+    } else if (this.url && this.key) {
+      this.login(
+        localStorage.getItem('sb_email'),
+        localStorage.getItem('sb_pass_hint')
+      ).catch(() => setSyncStatus('error', 'Auth failed'));
+    } else {
+      setSyncStatus('offline', 'Not configured');
+    }
+  },
+
+  async login(email, password) {
+    if (!this.url || !this.key || !email || !password) return false;
+    setSyncStatus('syncing', 'Connecting...');
+    try {
+      const res = await fetch(`${this.url}/auth/v1/token?grant_type=password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': this.key },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (data.access_token) {
+        this.token = data.access_token;
+        this.ready = true;
+        // Store token with expiry (1 hour)
+        localStorage.setItem('sb_token', this.token);
+        localStorage.setItem('sb_token_expiry', String(Date.now() + 3500000));
+        setSyncStatus('synced', 'Connected');
+        // Flush any queued items
+        this.flushQueue();
+        return true;
+      } else {
+        setSyncStatus('error', 'Auth failed');
+        return false;
+      }
+    } catch {
+      setSyncStatus('error', 'No signal');
+      return false;
+    }
+  },
+
+  headers() {
+    return {
+      'Content-Type': 'application/json',
+      'apikey': this.key,
+      'Authorization': `Bearer ${this.token}`,
+      'Prefer': 'resolution=merge-duplicates'
+    };
+  },
+
+  async upsert(table, data) {
+    if (!this.ready || !navigator.onLine) {
+      this.queue.push({ table, data });
+      setSyncStatus('offline', 'Queued');
+      return;
+    }
+    setSyncStatus('syncing', 'Syncing...');
+    try {
+      const res = await fetch(`${this.url}/rest/v1/${table}`, {
+        method: 'POST',
+        headers: { ...this.headers(), 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok || res.status === 201) {
+        setSyncStatus('synced', 'Synced');
+        return true;
+      } else {
+        const err = await res.json();
+        // Token expired — re-auth
+        if (res.status === 401) {
+          this.token = null; this.ready = false;
+          localStorage.removeItem('sb_token');
+          const email = localStorage.getItem('sb_email');
+          const pass  = localStorage.getItem('sb_pass_enc');
+          if (email && pass) {
+            const ok = await this.login(email, atob(pass));
+            if (ok) return this.upsert(table, data);
+          }
+        }
+        setSyncStatus('error', 'Sync error');
+        this.queue.push({ table, data });
+        return false;
+      }
+    } catch {
+      setSyncStatus('offline', 'No signal');
+      this.queue.push({ table, data });
+      return false;
+    }
+  },
+
+  async flushQueue() {
+    if (!this.ready || !navigator.onLine || !this.queue.length) return;
+    const items = [...this.queue];
+    this.queue = [];
+    for (const item of items) {
+      await this.upsert(item.table, item.data);
+    }
+  },
+
+  async fetchClients() {
+    if (!this.ready || !navigator.onLine) return [];
+    try {
+      const res = await fetch(`${this.url}/rest/v1/clients?select=*&order=created.desc`, {
+        headers: this.headers()
+      });
+      if (res.ok) return await res.json();
+    } catch {}
+    return [];
+  },
+
+  async fetchSurvey(clientId) {
+    if (!this.ready || !navigator.onLine) return null;
+    try {
+      const res = await fetch(`${this.url}/rest/v1/surveys?client_id=eq.${clientId}&select=*`, {
+        headers: this.headers()
+      });
+      if (res.ok) {
+        const rows = await res.json();
+        return rows[0] || null;
+      }
+    } catch {}
+    return null;
+  }
+};
+
+function setSyncStatus(state, label) {
+  const dot = document.getElementById('syncDot');
+  const lbl = document.getElementById('syncLabel');
+  if (!dot || !lbl) return;
+  dot.className = `sync-dot ${state}`;
+  lbl.textContent = label;
+}
+
+// Config screen functions
+function showConfig() {
+  // Pre-fill saved values
+  const url = localStorage.getItem('sb_url') || '';
+  const key = localStorage.getItem('sb_key') || '';
+  const email = localStorage.getItem('sb_email') || '';
+  document.getElementById('cfg-url').value = url;
+  document.getElementById('cfg-key').value = key;
+  document.getElementById('cfg-email').value = email;
+  document.getElementById('cfg-pass').value = '';
+  showView('config');
+}
+
+async function saveConfig() {
+  const url   = document.getElementById('cfg-url').value.trim().replace(/\/$/, '');
+  const key   = document.getElementById('cfg-key').value.trim();
+  const email = document.getElementById('cfg-email').value.trim();
+  const pass  = document.getElementById('cfg-pass').value;
+  if (!url || !key || !email || !pass) {
+    toast('All fields required', 'error'); return;
+  }
+  localStorage.setItem('sb_url',      url);
+  localStorage.setItem('sb_key',      key);
+  localStorage.setItem('sb_email',    email);
+  localStorage.setItem('sb_pass_enc', btoa(pass));
+  SB.url = url; SB.key = key;
+  toast('Connecting...', '');
+  const ok = await SB.login(email, pass);
+  if (ok) {
+    toast('Connected to Supabase ✓', 'success');
+    // Sync all local data up
+    syncAllToSupabase();
+    showClients();
+  } else {
+    toast('Connection failed — check credentials', 'error');
+  }
+}
+
+function clearConfig() {
+  ['sb_url','sb_key','sb_email','sb_pass_enc','sb_token','sb_token_expiry'].forEach(k => localStorage.removeItem(k));
+  SB.url = null; SB.key = null; SB.token = null; SB.ready = false;
+  setSyncStatus('offline', 'Not configured');
+  toast('Config cleared', '');
+}
+
+async function syncAllToSupabase() {
+  if (!SB.ready) return;
+  const clients = await dbGetAll('clients');
+  for (const c of clients) {
+    await SB.upsert('clients', {
+      id: c.id, name: c.name, type: c.type, address: c.address,
+      contact: c.contact, phone: c.phone, email: c.email,
+      plan: c.plan, area: c.area, notes: c.notes,
+      has_survey: c.hasSurvey, created: c.created,
+      updated: new Date().toISOString()
+    });
+    const survey = await dbGet('surveys', c.id);
+    if (survey) {
+      await SB.upsert('surveys', {
+        client_id: c.id,
+        data: survey.data,
+        survey_date: survey.date,
+        updated: new Date().toISOString()
+      });
+    }
+  }
+}
+
+// Auto-sync when coming back online
+window.addEventListener('online', () => {
+  setSyncStatus('syncing', 'Reconnecting...');
+  const pass = localStorage.getItem('sb_pass_enc');
+  const email = localStorage.getItem('sb_email');
+  if (email && pass && SB.url && SB.key) {
+    SB.login(email, atob(pass)).then(ok => {
+      if (ok) SB.flushQueue();
+    });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
