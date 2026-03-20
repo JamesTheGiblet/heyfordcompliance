@@ -43,12 +43,15 @@ button{cursor:pointer;font-family:inherit;border:none;background:none}
 .sec-sub{font-size:clamp(13px,1.5vw,15px);color:var(--mg);line-height:1.7;max-width:600px;margin-bottom:24px}
 
 /* Reveal animation */
-.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
-.reveal.visible{opacity:1;transform:none}
-.reveal-d1{transition-delay:.1s}
-.reveal-d2{transition-delay:.2s}
-.reveal-d3{transition-delay:.3s}
-.reveal-d4{transition-delay:.4s}
+/* Reveal — visible by default, animated as progressive enhancement */
+.reveal{opacity:1;transform:none}
+.js-loaded .reveal{}
+.js-loaded .reveal.visible{}
+.js-loaded 
+.js-loaded 
+.js-loaded 
+.js-loaded 
+
 
 /* ── SHELL ───────────────────────────────────────────────────────────────── */
 .page{min-height:100vh;background:var(--white);max-width:1400px;margin:0 auto;box-shadow:0 0 80px rgba(0,0,0,.3);display:flex;flex-direction:column}
@@ -312,7 +315,7 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
       <a href="#contact">Contact</a>
     </nav>
     <div class="nav-right">
-      <div class="nav-phone"><strong>+44 7930 057731</strong></div>
+      <div class="nav-phone"><strong>07930 057731</strong></div>
       <button class="btn-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Free first visit</button>
       <button class="nav-hamburger" id="hamburger" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -334,22 +337,22 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
   <div class="hero-inner inner">
     <div class="hero-grid">
       <div>
-        <div class="hero-eyebrow reveal">Local Compliance Service · Bicester &amp; Upper Heyford, Oxfordshire</div>
-        <h1 class="hero-title reveal reveal-d1">
+        <div class="hero-eyebrow">Local Compliance Service · Bicester &amp; Upper Heyford, Oxfordshire</div>
+        <h1 class="hero-title">
           <span class="l1">Heyford</span>
           <span class="l2">Compliance</span>
           <span class="l3">Co.</span>
         </h1>
-        <div class="hero-rule reveal reveal-d2"></div>
-        <p class="hero-sub reveal reveal-d2">Monthly compliance visits covering fire safety, water hygiene, PAT testing, and general facilities — with a same-day digital report in your inbox every time.</p>
-        <p class="hero-tag reveal reveal-d3">"One Visit. Every Check. Complete Peace of Mind."</p>
-        <div class="hero-btns reveal reveal-d3">
+        <div class="hero-rule"></div>
+        <p class="hero-sub">Monthly compliance visits covering fire safety, water hygiene, PAT testing, and general facilities — with a same-day digital report in your inbox every time.</p>
+        <p class="hero-tag">"One Visit. Every Check. Complete Peace of Mind."</p>
+        <div class="hero-btns">
           <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Book free first visit</button>
           <button class="btn-ghost" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">See what's included</button>
         </div>
-        <p class="hero-footnote reveal reveal-d4">Serving warehouses, small businesses, and landlords across Bicester, Upper Heyford, and surrounding villages.</p>
+        <p class="hero-footnote">Serving warehouses, small businesses, and landlords across Bicester, Upper Heyford, and surrounding villages.</p>
       </div>
-      <aside class="hero-card reveal reveal-d2">
+      <aside class="hero-card">
         <div class="hc-label">At a glance</div>
         <div class="hc-stats">
           <div class="hc-stat"><div class="hc-num">1</div><div class="hc-lbl">Visit / Month</div></div>
@@ -388,10 +391,10 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
 <!-- ── ABOUT ── -->
 <section class="about-sec anchor-target" id="about">
   <div class="inner">
-    <div class="eyebrow reveal">01 · Who we are</div>
-    <h2 class="sec-title reveal reveal-d1">Modern, local compliance — done properly</h2>
+    <div class="eyebrow">01 · Who we are</div>
+    <h2 class="sec-title">Modern, local compliance — done properly</h2>
     <div class="about-grid">
-      <div class="about-body reveal reveal-d2">
+      <div class="about-body">
         <p>Heyford Compliance Co. is a modern, local compliance service covering Bicester, Upper Heyford, and the surrounding villages of Oxfordshire. We deliver every routine compliance check your business needs in a single monthly visit — with a digital report in your inbox the same day.</p>
         <p>We work with warehouses, small businesses, and landlords who want compliance handled properly — without the hassle of managing multiple contractors, chasing paperwork, or wondering if they're covered.</p>
         <p>Every visit is systematic, documented, and designed to give you complete peace of mind. You get one point of contact who knows your site, understands your risks, and takes responsibility for the full compliance cycle — month after month.</p>
@@ -402,7 +405,7 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
           <div class="pill">Built on self-built digital tools</div>
         </div>
       </div>
-      <div class="about-card reveal reveal-d3">
+      <div class="about-card">
         <div class="ac-title">Why local businesses choose us</div>
         <div class="why-grid">
           <div class="why-item">
@@ -426,12 +429,12 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
 <!-- ── SERVICES ── -->
 <section class="services-sec anchor-target" id="services">
   <div class="inner">
-    <div class="eyebrow reveal">02 · Our services</div>
-    <h2 class="sec-title reveal reveal-d1">One monthly visit. <span class="gold">Every essential check.</span></h2>
-    <p class="sec-sub reveal reveal-d1">One appointment. All checks. Digital report by evening.</p>
+    <div class="eyebrow">02 · Our services</div>
+    <h2 class="sec-title">One monthly visit. <span class="gold">Every essential check.</span></h2>
+    <p class="sec-sub">One appointment. All checks. Digital report by evening.</p>
     <div class="services-grid">
       <div>
-        <div class="checks-grid reveal reveal-d2">
+        <div class="checks-grid">
           <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Fire alarm test</strong><span>Full functional test with logged results.</span></div></div>
           <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Emergency lighting</strong><span>Duration and function test, recorded.</span></div></div>
           <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Fire door inspection</strong><span>Gap, seal, self-closer, and signage checks.</span></div></div>
@@ -443,12 +446,12 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
           <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Minor repairs on the spot</strong><span>Small fixes handled at no extra charge.</span></div></div>
           <div class="check-item"><div class="ci-icon">✓</div><div class="ci-body"><strong>Same-day digital report</strong><span>Branded PDF to your inbox before end of day.</span></div></div>
         </div>
-        <div class="report-callout reveal reveal-d3">
+        <div class="report-callout">
           <div class="rc-title">The digital report — your hidden differentiator</div>
           <div class="rc-body">Every client receives a branded PDF report within hours of the visit — not days. It includes pass/fail status per check, photographic evidence where required, action items, and next visit date. Clients keep these for their insurance files. No other local provider generates this automatically.</div>
         </div>
       </div>
-      <div class="reveal reveal-d3">
+      <div>
         <div class="addons-wrap">
           <div class="addons-title">Optional add-on services</div>
           <div class="addon-item"><div><div class="addon-name">Fire risk assessment</div><div class="addon-sub">Written FRA to Regulatory Reform Order standard.</div></div><div class="addon-price">£150–£350</div></div>
@@ -466,10 +469,10 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
 <!-- ── PLANS ── -->
 <section class="plans-sec anchor-target" id="plans">
   <div class="inner">
-    <div class="eyebrow reveal">03 · Plans &amp; pricing</div>
-    <h2 class="sec-title reveal reveal-d1">Simple, transparent monthly pricing</h2>
-    <p class="sec-sub reveal reveal-d1">No surprises. Each plan includes all 10 core checks, same-day branded PDF reports, CRM-tracked compliance history, automated visit reminders, and a direct line to your technician.</p>
-    <div class="plans-grid reveal reveal-d2">
+    <div class="eyebrow">03 · Plans &amp; pricing</div>
+    <h2 class="sec-title">Simple, transparent monthly pricing</h2>
+    <p class="sec-sub">No surprises. Each plan includes all 10 core checks, same-day branded PDF reports, CRM-tracked compliance history, automated visit reminders, and a direct line to your technician.</p>
+    <div class="plans-grid">
       <div class="plan-card">
         <div class="plan-tag">For shops, cafés, salons, offices</div>
         <div class="plan-name">Small Business Plan</div>
@@ -507,10 +510,10 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
         </ul>
       </div>
     </div>
-    <div class="included-note reveal reveal-d3">
+    <div class="included-note">
       <strong>Included in every plan:</strong> All core checks · Same-day branded PDF report · CRM-tracked compliance history · Automated visit reminders · Direct line to James Gilbert, your technician and founder.
     </div>
-    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:20px" class="reveal reveal-d3">
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:20px">
       <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get a tailored quote</button>
       <span style="font-size:12px;color:var(--mg)">Free first visit for all new clients — see the full service before you commit to anything.</span>
     </div>
@@ -520,27 +523,27 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
 <!-- ── PROCESS ── -->
 <section class="process-sec anchor-target" id="process">
   <div class="inner">
-    <div class="eyebrow reveal">04 · How it works</div>
-    <h2 class="sec-title reveal reveal-d1">A simple, predictable monthly cycle</h2>
-    <p class="sec-sub reveal reveal-d1">Same day each month. All checks completed systematically. Issues fixed on the spot. Report in your inbox before end of day.</p>
-    <div class="steps-grid reveal reveal-d2">
+    <div class="eyebrow">04 · How it works</div>
+    <h2 class="sec-title">A simple, predictable monthly cycle</h2>
+    <p class="sec-sub">Same day each month. All checks completed systematically. Issues fixed on the spot. Report in your inbox before end of day.</p>
+    <div class="steps-grid">
       <div class="step-card"><div class="step-num">01</div><div class="step-title">We visit</div><p class="step-body">Same day each month — you never need to remember or book. We just show up.</p></div>
       <div class="step-card"><div class="step-num">02</div><div class="step-title">We check everything</div><p class="step-body">All 10 compliance checks completed systematically using digital checklists.</p></div>
       <div class="step-card"><div class="step-num">03</div><div class="step-title">We fix minor issues</div><p class="step-body">Small repairs handled on the spot. No extra charge. No follow-up booking needed.</p></div>
       <div class="step-card"><div class="step-num">04</div><div class="step-title">We send your report</div><p class="step-body">Branded digital PDF auto-generated and in your inbox before end of day.</p></div>
       <div class="step-card"><div class="step-num">05</div><div class="step-title">You're covered</div><p class="step-body">Clean documentation ready for insurers, auditors, or HSE — no chasing paperwork.</p></div>
     </div>
-    <div class="process-quote reveal reveal-d3">"Most businesses in Bicester have never had a compliance visit. <span>One visit with us puts you ahead of 90% of your neighbours.</span>"</div>
+    <div class="process-quote">"Most businesses in Bicester have never had a compliance visit. <span>One visit with us puts you ahead of 90% of your neighbours.</span>"</div>
   </div>
 </section>
 
 <!-- ── MARKET ── -->
 <section class="market-sec anchor-target" id="market">
   <div class="inner">
-    <div class="eyebrow reveal">05 · Who we serve</div>
-    <h2 class="sec-title reveal reveal-d1">Built for real local sites</h2>
-    <p class="sec-sub reveal reveal-d1">We focus on the kinds of sites that make Bicester and Upper Heyford tick — from industrial units to high street shops to landlord portfolios.</p>
-    <div class="market-grid reveal reveal-d2">
+    <div class="eyebrow">05 · Who we serve</div>
+    <h2 class="sec-title">Built for real local sites</h2>
+    <p class="sec-sub">We focus on the kinds of sites that make Bicester and Upper Heyford tick — from industrial units to high street shops to landlord portfolios.</p>
+    <div class="market-grid">
       <div class="market-card">
         <div class="mc-num">01</div>
         <div class="mc-title">Warehouses &amp; Industrial</div>
@@ -580,13 +583,13 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
   <div class="inner">
     <div class="free-grid">
       <div>
-        <div class="free-eyebrow reveal">Free first visit · No obligation</div>
-        <h2 class="free-title reveal reveal-d1">Try the full<br><span>service first.</span></h2>
-        <p class="free-sub reveal reveal-d2">We offer a complimentary first compliance check to all new clients — no obligation, no contracts, no pressure. You'll receive the full digital report and see exactly what we do before committing to anything.</p>
-        <button class="btn-primary reveal reveal-d2" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Arrange your free visit</button>
-        <p class="free-small reveal reveal-d3">Available for warehouses, small businesses, and landlords within Bicester, Upper Heyford, and nearby villages.</p>
+        <div class="free-eyebrow">Free first visit · No obligation</div>
+        <h2 class="free-title">Try the full<br><span>service first.</span></h2>
+        <p class="free-sub">We offer a complimentary first compliance check to all new clients — no obligation, no contracts, no pressure. You'll receive the full digital report and see exactly what we do before committing to anything.</p>
+        <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Arrange your free visit</button>
+        <p class="free-small">Available for warehouses, small businesses, and landlords within Bicester, Upper Heyford, and nearby villages.</p>
       </div>
-      <div class="free-card reveal reveal-d2">
+      <div class="free-card">
         <div class="free-card-title">What your free visit includes</div>
         <div class="free-item"><span class="free-item-icon">✓</span>Full monthly visit — all 10 compliance checks completed on-site, exactly as a paid visit.</div>
         <div class="free-item"><span class="free-item-icon">✓</span>Same-day branded PDF compliance report delivered to your email before end of day.</div>
@@ -600,46 +603,52 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
 <!-- ── CONTACT ── -->
 <section class="contact-sec anchor-target" id="contact">
   <div class="inner">
-    <div class="eyebrow reveal">06 · Get in touch</div>
-    <h2 class="sec-title reveal reveal-d1">Let's get your first visit booked</h2>
-    <p class="sec-sub reveal reveal-d1">Whether you want a free first visit, a quote, or just a quick sense-check of your current setup, you can reach James directly — no call centre, no ticket system.</p>
+    <div class="eyebrow">06 · Get in touch</div>
+    <h2 class="sec-title">Let's get your first visit booked</h2>
+    <p class="sec-sub">Whether you want a free first visit, a quote, or just a quick sense-check of your current setup, you can reach James directly — no call centre, no ticket system.</p>
     <div class="contact-grid">
-      <div class="contact-info reveal reveal-d2">
+      <div class="contact-info">
         <div class="ci-title">Direct contact details</div>
         <div class="ci-row"><span class="ci-key">Name</span><span class="ci-val">James Gilbert</span></div>
         <div class="ci-row"><span class="ci-key">Role</span><span class="ci-val">Compliance Technician &amp; Founder</span></div>
-        <div class="ci-row"><span class="ci-key">Phone</span><span class="ci-val">+44 7930 057731</span></div>
-        <div class="ci-row"><span class="ci-key">Email</span><span class="ci-val">james@heyfordcompliance.co.uk</span></div>
+        <div class="ci-row"><span class="ci-key">Phone</span><span class="ci-val">07930 057731</span></div>
+        <div class="ci-row"><span class="ci-key">Email</span><span class="ci-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="315b505c544271595448575e4355525e5c415d58505f52541f525e1f445a">[email&#160;protected]</a></span></div>
         <div class="ci-row"><span class="ci-key">Website</span><span class="ci-val">heyfordcompliance.co.uk</span></div>
         <div class="ci-row"><span class="ci-key">Location</span><span class="ci-val">Upper Heyford, Bicester, Oxfordshire</span></div>
         <div class="ci-tagline">"One Visit. Every Check. Complete Peace of Mind."</div>
       </div>
-      <div class="form-wrap reveal reveal-d3">
+      <div class="form-wrap">
         <div class="form-title">Quick enquiry — we reply within one working day</div>
-        <form id="contactForm" onsubmit="handleSubmit(event)">
+        <form id="contactForm" action="https://formspree.io/f/xyknovby" method="POST" onsubmit="handleSubmit(event)">
+          <!-- Formspree config -->
+          <input type="hidden" name="_subject" value="New enquiry — Heyford Compliance Co."/>
+          <input type="hidden" name="_replyto" value=""/>
+          <input type="text" name="_gotcha" style="display:none"/>
+          <input type="hidden" name="_next" value="https://heyfordcompliance.co.uk/#contact"/>
+
           <div class="form-row-2">
             <div>
               <label class="form-label" for="fname">Your name *</label>
-              <input class="form-input" id="fname" type="text" placeholder="Jane Smith" required/>
+              <input class="form-input" id="fname" name="name" type="text" placeholder="Jane Smith" required/>
             </div>
             <div>
               <label class="form-label" for="fbiz">Business / property name</label>
-              <input class="form-input" id="fbiz" type="text" placeholder="Acme Warehousing Ltd"/>
+              <input class="form-input" id="fbiz" name="business" type="text" placeholder="Acme Warehousing Ltd"/>
             </div>
           </div>
           <div class="form-row-2">
             <div>
               <label class="form-label" for="femail">Email *</label>
-              <input class="form-input" id="femail" type="email" placeholder="you@example.com" required/>
+              <input class="form-input" id="femail" name="email" type="email" placeholder="you@example.com" required/>
             </div>
             <div>
               <label class="form-label" for="fphone">Phone</label>
-              <input class="form-input" id="fphone" type="tel" placeholder="+44 7930 057731"/>
+              <input class="form-input" id="fphone" name="phone" type="tel" placeholder="07930 057731"/>
             </div>
           </div>
           <div class="form-row">
             <label class="form-label" for="fplan">Which plan are you interested in?</label>
-            <select class="form-select" id="fplan">
+            <select class="form-select" id="fplan" name="plan">
               <option value="">Not sure yet — happy to advise</option>
               <option>Small Business Plan (£80–£120/month)</option>
               <option>Warehouse / Industrial (£150–£300/month)</option>
@@ -649,11 +658,11 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
           </div>
           <div class="form-row">
             <label class="form-label" for="fmsg">Tell us about your site</label>
-            <textarea class="form-textarea" id="fmsg" placeholder="Site type, number of units, any specific compliance concerns or current setup..."></textarea>
+            <textarea class="form-textarea" id="fmsg" name="message" placeholder="Site type, number of units, any specific compliance concerns or current setup..."></textarea>
             <div class="form-help">The more context you share, the better we can tailor our first visit.</div>
           </div>
           <button class="btn-primary form-submit" type="submit">Send enquiry →</button>
-          <div class="form-footer-note">For urgent questions, call James directly on +44 7930 057731.</div>
+          <div class="form-footer-note">For urgent questions, call James directly on 07930&#160;057731.</div>
         </form>
       </div>
     </div>
@@ -676,8 +685,8 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
           </div>
           <p class="footer-desc">Monthly compliance visits covering fire safety, water hygiene, PAT testing, and general facilities. Same-day digital reports. One technician. Bicester &amp; Upper Heyford, Oxfordshire.</p>
           <div class="footer-contact-items">
-            <div class="footer-contact-item"><strong>+44 7930 057731</strong></div>
-            <div class="footer-contact-item"><strong>james@heyfordcompliance.co.uk</strong></div>
+            <div class="footer-contact-item"><strong>07930 057731</strong></div>
+            <div class="footer-contact-item"><strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="274d464a4254674f425e4148554344484a574b4e4649444209444809524c">[email&#160;protected]</a></strong></div>
             <div class="footer-contact-item">heyfordcompliance.co.uk</div>
           </div>
         </div>
@@ -720,13 +729,31 @@ footer{background:var(--navy3);border-top:3px solid var(--gold);margin-top:auto}
 <!-- Toast notification -->
 <div class="toast" id="toast">Enquiry sent — we'll be in touch within one working day.</div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── Reveal on scroll ──
+// Only animate if JS is working — content visible by default
+
+
 const reveals = document.querySelectorAll('.reveal');
+
+function revealAll() {
+  reveals.forEach(el => el.classList.add('visible'));
+}
+
 const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: 0.12 });
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.01, rootMargin: '0px 0px -40px 0px' });
+
 reveals.forEach(el => io.observe(el));
+
+// Fallback: all after 600ms
+setTimeout(revealAll, 600);
+window.addEventListener('pageshow', revealAll);
 
 // ── Mobile nav ──
 const hamburger = document.getElementById('hamburger');
@@ -741,24 +768,47 @@ function closeNav() {
 }
 
 // ── Form ──
-function handleSubmit(e) {
+async function handleSubmit(e) {
   e.preventDefault();
+  const form = e.target;
+  const btn  = form.querySelector('.form-submit');
   const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  e.target.reset();
-  setTimeout(() => toast.classList.remove('show'), 4000);
+  const orig  = btn.textContent;
+
+  // Loading state
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+
+  try {
+    const data = new FormData(form);
+    const res  = await fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (res.ok) {
+      toast.textContent = '✓ Enquiry sent — James will reply within one working day.';
+      toast.style.background = 'var(--green)';
+      toast.classList.add('show');
+      form.reset();
+    } else {
+      const json = await res.json();
+      throw new Error(json.error || 'Submission failed');
+    }
+  } catch(err) {
+    toast.textContent = '✗ Something went wrong — please call 07930 057731 directly.';
+    toast.style.background = 'var(--red)';
+    toast.classList.add('show');
+    console.error(err);
+  } finally {
+    btn.textContent = orig;
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    setTimeout(() => toast.classList.remove('show'), 6000);
+  }
 }
 
 // ── Active nav link ──
-const sections = document.querySelectorAll('.anchor-target');
-const navAs = document.querySelectorAll('.nav-links a');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
-  navAs.forEach(a => {
-    a.style.color = a.getAttribute('href') === '#'+current ? 'var(--gold2)' : '';
-  });
-}, { passive: true });
-</script>
-</body>
-</html>
+const sections = document.querySelectorAll('.anchor-tar
