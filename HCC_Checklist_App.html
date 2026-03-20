@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#0D1F3C"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="HCC Visit"/>
+<title>HCC Monthly Visit</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0D1F3C;--navy2:#162B52;--navy3:#0A1828;
+  --gold:#C8922A;--gold2:#E0A83A;
+  --cream:#F7F4EE;--lg:#F2F4F7;--mg:#8A99B0;--dg:#D0D5DD;
+  --white:#FFFFFF;--green:#2A8A4A;--red:#C0392B;--amber:#E67E22;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:'Barlow',sans-serif;background:var(--navy3);color:var(--navy2);-webkit-font-smoothing:antialiased}
+button{cursor:pointer;font-family:inherit;border:none}
+input,textarea,select{font-family:inherit}
+
+/* ── SHELL ── */
+#app{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--navy);border-bottom:2px solid var(--gold);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px;flex-shrink:0;z-index:50}
+.topbar-logo{display:flex;align-items:center;gap:8px}
+.topbar-logo svg{width:22px;height:22px;flex-shrink:0}
+.topbar-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--white)}
+.topbar-name span{color:var(--gold)}
+.topbar-center{flex:1;text-align:center}
+.topbar-status{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--mg)}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+.topbar-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--mg);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:5px 10px;border-radius:2px;transition:.15s}
+.topbar-btn:hover{background:rgba(255,255,255,.14);color:var(--white)}
+.topbar-btn.gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.topbar-btn.gold:hover{background:var(--gold2)}
+.topbar-btn.green{background:var(--green);color:var(--white);border-color:var(--green)}
+.sync-wrap{display:flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid rgba(255,255,255,.1);border-radius:2px;cursor:pointer}
+.sync-wrap:hover{background:rgba(255,255,255,.06)}
+.sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:.3s}
+.sync-dot.synced{background:var(--green)}
+.sync-dot.syncing{background:var(--gold);animation:pulse .8s infinite}
+.sync-dot.error{background:var(--red)}
+.sync-dot.offline{background:var(--mg)}
+.sync-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--mg)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── OFFLINE BANNER ── */
+.offline-banner{background:var(--amber);color:var(--white);text-align:center;padding:6px;font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.15em;text-transform:uppercase;display:none;flex-shrink:0}
+.offline-banner.show{display:block}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:220px;background:var(--navy2);border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+.sidebar-header{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-client{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.sidebar-name{font-size:14px;font-weight:600;color:var(--white);line-height:1.3}
+.sidebar-meta{font-size:11px;color:var(--mg);margin-top:3px;line-height:1.5}
+.sidebar-sections{flex:1;overflow-y:auto;padding:8px 0}
+.sec-btn{width:100%;text-align:left;padding:10px 16px;background:none;border:none;color:var(--mg);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:10px;transition:.15s;border-left:3px solid transparent}
+.sec-btn:hover{background:rgba(255,255,255,.05);color:var(--white)}
+.sec-btn.active{background:rgba(200,146,42,.1);color:var(--gold);border-left-color:var(--gold)}
+.sec-btn.complete{color:var(--green)}
+.sec-btn.complete .sec-dot{background:var(--green)}
+.sec-btn.has-fails{color:var(--red)}
+.sec-btn.has-fails .sec-dot{background:var(--red)}
+.sec-btn.has-actions{color:var(--amber)}
+.sec-btn.has-actions .sec-dot{background:var(--amber)}
+.sec-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0}
+.sec-btn.active .sec-dot{background:var(--gold)}
+.sidebar-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.08)}
+.progress-bar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:6px}
+.progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:.3s}
+.progress-fill.all-pass{background:var(--green)}
+.progress-label{font-size:10px;color:var(--mg);display:flex;justify-content:space-between}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;background:var(--lg)}
+.content::-webkit-scrollbar{width:4px}
+.content::-webkit-scrollbar-thumb{background:var(--dg);border-radius:2px}
+
+/* ── VIEWS ── */
+.view{display:none;animation:fadeIn .2s ease}
+.view.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ── CLIENT SELECT VIEW ── */
+.select-view{padding:24px}
+.view-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:4px}
+.view-sub{font-size:13px;color:var(--mg);margin-bottom:20px}
+.client-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.client-card{background:var(--white);border:1px solid var(--dg);border-top:3px solid var(--dg);padding:16px;cursor:pointer;transition:.15s}
+.client-card:hover{border-top-color:var(--gold);box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.client-card.no-survey{opacity:.6;cursor:not-allowed}
+.client-card.no-survey:hover{border-top-color:var(--dg);box-shadow:none}
+.cc-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;color:var(--navy);margin-bottom:2px}
+.cc-type{font-size:11px;color:var(--mg);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.cc-address{font-size:12px;color:var(--mg);line-height:1.5;margin-bottom:8px}
+.cc-badge{display:inline-block;font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:2px}
+.cc-badge.ready{background:rgba(42,138,74,.1);color:var(--green);border:1px solid rgba(42,138,74,.3)}
+.cc-badge.no-survey{background:var(--lg);color:var(--mg);border:1px solid var(--dg)}
+.cc-visits{font-size:11px;color:var(--mg);margin-top:6px}
+
+/* ── CHECKLIST SECTION HEADER ── */
+.section-header{background:var(--navy);padding:14px 20px;border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:10}
+.section-header-row{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.section-icon{font-size:20px}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white)}
+.section-desc{font-size:12px;color:var(--mg)}
+.section-stats{display:flex;gap:12px;margin-top:8px}
+.stat-pill{display:flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:2px}
+.stat-pill.pass{background:rgba(42,138,74,.2);color:#A8F0C0}
+.stat-pill.fail{background:rgba(192,57,43,.2);color:#F5B7B1}
+.stat-pill.action{background:rgba(230,126,34,.2);color:#FAD7A0}
+.stat-pill.pending{background:rgba(138,153,176,.2);color:var(--mg)}
+
+/* ── SECTION NAV ── */
+.section-nav{display:flex;gap:6px;padding:10px 16px;background:var(--navy2);border-bottom:1px solid rgba(255,255,255,.08);overflow-x:auto}
+.section-nav::-webkit-scrollbar{display:none}
+.sec-nav-btn{flex-shrink:0;padding:6px 10px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.06);color:var(--mg);border:1px solid rgba(255,255,255,.1);border-radius:2px;cursor:pointer;transition:.15s;white-space:nowrap}
+.sec-nav-btn:hover{background:rgba(255,255,255,.1);color:var(--white)}
+.sec-nav-btn.current{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.sec-nav-btn.done-pass{border-color:var(--green);color:var(--green)}
+.sec-nav-btn.done-fail{border-color:var(--red);color:var(--red)}
+.sec-nav-btn.done-action{border-color:var(--amber);color:var(--amber)}
+
+/* ── CHECK ITEMS ── */
+.section-body{padding:16px}
+.check-block{background:var(--white);border:1px solid var(--dg);margin-bottom:10px}
+.check-block-head{background:var(--navy);padding:9px 14px}
+.check-block-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2)}
+.check-item{padding:12px 14px;border-bottom:1px solid var(--lg);display:flex;flex-direction:column;gap:8px}
+.check-item:last-child{border-bottom:none}
+.check-item-top{display:flex;align-items:flex-start;gap:10px}
+.check-ref{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--mg);min-width:32px;flex-shrink:0;margin-top:2px}
+.check-label-wrap{flex:1}
+.check-label{font-size:13px;font-weight:600;color:var(--navy);line-height:1.4;margin-bottom:2px}
+.check-sub{font-size:11px;color:var(--mg);line-height:1.4}
+.check-survey-val{font-size:11px;color:var(--gold);font-style:italic;margin-top:2px}
+
+/* ── RESULT BUTTONS ── */
+.result-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.result-btn{padding:7px 14px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border:2px solid var(--dg);background:var(--lg);color:var(--mg);border-radius:2px;cursor:pointer;transition:.15s;flex-shrink:0}
+.result-btn:hover{border-color:var(--navy);color:var(--navy)}
+.result-btn.sel-pass{background:rgba(42,138,74,.12);border-color:var(--green);color:var(--green)}
+.result-btn.sel-fail{background:rgba(192,57,43,.1);border-color:var(--red);color:var(--red)}
+.result-btn.sel-action{background:rgba(230,126,34,.1);border-color:var(--amber);color:var(--amber)}
+.result-btn.sel-na{background:rgba(138,153,176,.1);border-color:var(--mg);color:var(--mg)}
+
+/* ── CONDITION BUTTONS ── */
+.cond-row{display:flex;gap:4px}
+.cond-btn{padding:5px 10px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--dg);background:var(--lg);color:var(--mg);border-radius:2px;cursor:pointer;transition:.15s}
+.cond-btn.sel-good{background:rgba(42,138,74,.12);border-color:var(--green);color:var(--green)}
+.cond-btn.sel-fair{background:rgba(230,126,34,.1);border-color:var(--amber);color:var(--amber)}
+.cond-btn.sel-poor{background:rgba(192,57,43,.1);border-color:var(--red);color:var(--red)}
+.cond-btn.sel-na{background:rgba(138,153,176,.1);border-color:var(--mg);color:var(--mg)}
+
+/* ── TEMP INPUT ── */
+.temp-row{display:flex;align-items:center;gap:8px}
+.temp-input{width:80px;border:1px solid var(--dg);padding:6px 8px;font-size:14px;font-weight:700;color:var(--navy);border-radius:2px;text-align:center}
+.temp-input:focus{outline:none;border-color:var(--gold)}
+.temp-unit{font-size:12px;color:var(--mg)}
+.temp-indicator{font-size:11px;font-weight:700;padding:3px 8px;border-radius:2px}
+.temp-indicator.ok{background:rgba(42,138,74,.12);color:var(--green)}
+.temp-indicator.warn{background:rgba(192,57,43,.1);color:var(--red)}
+
+/* ── QTY INPUT ── */
+.qty-row{display:flex;align-items:center;gap:8px}
+.qty-label{font-size:11px;color:var(--mg)}
+.qty-input{width:70px;border:1px solid var(--dg);padding:6px 8px;font-size:14px;font-weight:700;color:var(--navy);border-radius:2px;text-align:center}
+.qty-input:focus{outline:none;border-color:var(--gold)}
+.qty-survey{font-size:11px;color:var(--mg);font-style:italic}
+
+/* ── NOTES ── */
+.notes-row{display:flex;gap:6px;align-items:flex-start}
+.notes-input{flex:1;border:1px solid var(--dg);padding:6px 8px;font-size:12px;color:var(--navy);border-radius:2px;resize:none;min-height:34px}
+.notes-input:focus{outline:none;border-color:var(--gold)}
+
+/* ── VISIT SUMMARY ── */
+.summary-view{padding:20px}
+.summary-header{background:var(--navy);padding:20px;border-top:3px solid var(--gold);margin-bottom:3px}
+.summary-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);margin-bottom:12px}
+.summary-stats{display:flex;gap:10px;flex-wrap:wrap}
+.summary-stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:10px 16px;text-align:center;min-width:80px}
+.summary-stat-num{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;line-height:1}
+.summary-stat-label{font-size:10px;color:var(--mg);letter-spacing:.12em;text-transform:uppercase;margin-top:3px}
+.summary-section{background:var(--white);border:1px solid var(--dg);margin-bottom:3px}
+.summary-sec-head{background:var(--navy2);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.summary-sec-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold2)}
+.summary-table{width:100%;border-collapse:collapse;font-size:12px}
+.summary-table th{background:var(--navy);color:var(--white);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:7px 12px;text-align:left}
+.summary-table td{padding:8px 12px;border-bottom:1px solid var(--lg);color:var(--navy2);vertical-align:top}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:var(--lg)}
+.result-badge{display:inline-block;font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:2px}
+.result-badge.pass{background:rgba(42,138,74,.12);color:var(--green);border:1px solid rgba(42,138,74,.3)}
+.result-badge.fail{background:rgba(192,57,43,.1);color:var(--red);border:1px solid rgba(192,57,43,.3)}
+.result-badge.action{background:rgba(230,126,34,.1);color:var(--amber);border:1px solid rgba(230,126,34,.3)}
+.result-badge.na{background:var(--lg);color:var(--mg);border:1px solid var(--dg)}
+.result-badge.pending{background:var(--lg);color:var(--mg);border:1px solid var(--dg)}
+.summary-actions{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap}
+
+/* ── HISTORY VIEW ── */
+.history-view{padding:20px}
+.visit-card{background:var(--white);border:1px solid var(--dg);border-left:3px solid var(--dg);padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.visit-card:hover{border-left-color:var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.visit-card.all-pass{border-left-color:var(--green)}
+.visit-card.has-fails{border-left-color:var(--red)}
+.visit-card.has-actions{border-left-color:var(--amber)}
+.visit-date{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--navy)}
+.visit-meta{font-size:11px;color:var(--mg);margin-top:3px}
+.visit-stats{display:flex;gap:6px;flex-shrink:0}
+
+/* ── REPORT VIEW ── */
+.report-view{padding:20px;max-width:800px;margin:0 auto}
+.report-header{background:var(--navy);padding:24px;border-top:3px solid var(--gold);margin-bottom:3px}
+.report-co{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--white);margin-bottom:2px}
+.report-co span{color:var(--gold)}
+.report-type{font-size:11px;color:var(--mg);letter-spacing:.2em;text-transform:uppercase}
+.report-fields{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px}
+.rf{flex:1;min-width:130px}
+.rf-label{font-size:10px;color:var(--mg);letter-spacing:.15em;text-transform:uppercase;margin-bottom:3px}
+.rf-value{font-size:13px;color:var(--white);font-weight:600}
+.report-section{background:var(--white);border:1px solid var(--dg);margin-bottom:3px}
+.report-sec-head{background:var(--navy2);padding:10px 16px}
+.report-sec-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold2)}
+.report-table{width:100%;border-collapse:collapse;font-size:12px}
+.report-table th{background:var(--navy);color:var(--white);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:7px 12px;text-align:left}
+.report-table td{padding:8px 12px;border-bottom:1px solid var(--lg);color:var(--navy2);vertical-align:top}
+.report-table tr:nth-child(even) td{background:var(--lg)}
+.report-table tr:last-child td{border-bottom:none}
+.report-footer-band{background:var(--navy3);padding:14px 20px;border-top:2px solid var(--gold);display:flex;justify-content:space-between;font-size:11px;color:var(--mg)}
+.report-actions{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap}
+
+/* ── CONFIG ── */
+.config-view{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 52px);background:var(--navy3)}
+.config-card{background:var(--white);width:100%;max-width:460px;margin:20px;border-top:3px solid var(--gold)}
+.config-header{background:var(--navy);padding:18px 22px}
+.config-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;color:var(--white);margin-bottom:3px}
+.config-sub{font-size:12px;color:var(--mg)}
+.config-body{padding:20px}
+.config-footer{padding:14px 20px;border-top:1px solid var(--dg);display:flex;justify-content:flex-end;gap:8px}
+.field{margin-bottom:12px}
+.field-label{display:block;font-size:11px;font-weight:600;color:var(--mg);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.field-input{width:100%;border:1px solid var(--dg);background:var(--white);padding:8px 10px;font-size:13px;color:var(--navy);outline:none;border-radius:2px;transition:.15s}
+.field-input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(200,146,42,.15)}
+.config-note{font-size:11px;color:var(--mg);line-height:1.6;margin-top:10px;padding:10px 12px;background:var(--lg);border-left:3px solid var(--gold)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:16px;background:var(--navy);border-left:3px solid var(--gold);color:var(--white);padding:10px 16px;font-size:12px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;z-index:999;opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;max-width:280px}
+.toast.show{opacity:1;transform:none}
+.toast.success{border-left-color:var(--green)}
+.toast.error{border-left-color:var(--red)}
+
+/* ── MOBILE ── */
+.mob-sidebar-toggle{display:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--mg);padding:6px 8px;border-radius:2px;font-size:16px}
+@media(max-width:680px){
+  .sidebar{position:fixed;top:52px;left:0;bottom:0;z-index:40;transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .mob-sidebar-toggle{display:flex;align-items:center}
+}
+
+/* ── PRINT ── */
+@media print{
+  .topbar,.sidebar,.report-actions,.offline-banner,.toast,.section-nav{display:none!important}
+  .main{display:block}
+  .content{overflow:visible;height:auto}
+  body{background:white}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<div class="offline-banner" id="offlineBanner">⚡ Offline — data saved locally</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <button class="mob-sidebar-toggle" onclick="toggleSidebar()">☰</button>
+  <div class="topbar-logo">
+    <svg viewBox="0 0 72 72" fill="none">
+      <path d="M36 4L8 16V38C8 53.2 20.4 65.4 36 68C51.6 65.4 64 53.2 64 38V16L36 4Z" fill="rgba(255,255,255,.06)"/>
+      <path d="M36 10L13 20.5V38C13 50.2 23.2 60.8 36 63.4C48.8 60.8 59 50.2 59 38V20.5L36 10Z" fill="none" stroke="#C8922A" stroke-width="1.5"/>
+      <path d="M24 37L31.5 45L48 28" stroke="#C8922A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="topbar-name">HCC <span>Visit</span></div>
+  </div>
+  <div class="topbar-center">
+    <div class="topbar-status" id="topbarStatus">Select a client</div>
+  </div>
+  <div class="topbar-actions">
+    <div class="sync-wrap" onclick="showConfig()" title="Sync status">
+      <div class="sync-dot offline" id="syncDot"></div>
+      <span class="sync-label" id="syncLabel">Offline</span>
+    </div>
+    <button class="topbar-btn" onclick="showSelectClient()">Clients</button>
+    <button class="topbar-btn" onclick="showHistory()" id="historyBtn" style="display:none">History</button>
+    <button class="topbar-btn gold" onclick="saveVisit()" id="saveBtn" style="display:none">Save</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-client">Monthly Visit</div>
+      <div class="sidebar-name" id="sidebarName">No client</div>
+      <div class="sidebar-meta" id="sidebarMeta"></div>
+    </div>
+    <div class="sidebar-sections" id="sidebarSections"></div>
+    <div class="sidebar-footer">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-label"><span id="progressText">0 of 0 checked</span><span id="progressPct">0%</span></div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="contentArea">
+
+    <!-- CLIENT SELECT -->
+    <div class="view active" id="view-select">
+      <div class="select-view">
+        <div class="view-title">Start Monthly Visit</div>
+        <div class="view-sub">Select a client to begin today's compliance checklist.</div>
+        <div class="client-grid" id="clientGrid"></div>
+      </div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="view" id="view-checklist">
+      <div class="section-header" id="sectionHeader">
+        <div class="section-header-row">
+          <span class="section-icon" id="sectionIcon">🔥</span>
+          <div class="section-title" id="sectionTitle">Section</div>
+        </div>
+        <div class="section-desc" id="sectionDesc"></div>
+        <div class="section-stats" id="sectionStats"></div>
+      </div>
+      <div class="section-nav" id="sectionNav"></div>
+      <div class="section-body" id="sectionBody"></div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="view" id="view-summary">
+      <div class="summary-view" id="summaryContent"></div>
+    </div>
+
+    <!-- REPORT -->
+    <div class="view" id="view-report">
+      <div class="report-view" id="reportContent"></div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="view" id="view-history">
+      <div class="history-view">
+        <div class="view-title" id="historyTitle">Visit History</div>
+        <div class="view-sub" id="historyClient"></div>
+        <div id="historyList"></div>
+      </div>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="view" id="view-config">
+      <div class="config-view">
+        <div class="config-card">
+          <div class="config-header">
+            <div class="config-title">Supabase Configuration</div>
+            <div class="config-sub">Connect to sync visits across devices.</div>
+          </div>
+          <div class="config-body">
+            <div class="field"><label class="field-label">Project URL</label>
+              <input class="field-input" id="cfg-url" type="url" placeholder="https://xxxx.supabase.co"/></div>
+            <div class="field"><label class="field-label">Anon / Public Key</label>
+              <input class="field-input" id="cfg-key" type="password" placeholder="eyJ..."/></div>
+            <div class="field"><label class="field-label">Email</label>
+              <input class="field-input" id="cfg-email" type="email" placeholder="james@heyfordcompliance.co.uk"/></div>
+            <div class="field"><label class="field-label">Password</label>
+              <input class="field-input" id="cfg-pass" type="password"/></div>
+            <div class="config-note">Same credentials as the Survey app. Stored on this device only.</div>
+          </div>
+          <div class="config-footer">
+            <button class="topbar-btn" onclick="showSelectClient()">Cancel</button>
+            <button class="topbar-btn gold" onclick="saveConfig()">Save & Connect</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// CHECKLIST SCHEMA — auto-populated from survey
+// ═══════════════════════════════════════════════
+const CHECKLIST = [
+  {
+    id:'fire', icon:'🔥', title:'Fire Safety',
+    desc:'Fire detection, emergency lighting, extinguishers, fire doors, escape routes',
+    blocks:[
+      { id:'alarm', title:'Fire Alarm System', items:[
+        { id:'fa_panel',    label:'Panel checked — no faults displayed',     types:['result'] },
+        { id:'fa_zone',     label:'Zone test completed',                      types:['result','notes'], survey_hint:'alarm_zones' },
+        { id:'fa_callpt',   label:'Manual call point tested',                 types:['result','notes'] },
+        { id:'fa_detectors',label:'Detector heads checked (visual)',          types:['result','qty'],   survey_hint:'detectors', qty_label:'Checked' },
+      ]},
+      { id:'em', title:'Emergency Lighting', items:[
+        { id:'em_function', label:'All luminaires illuminate on test',        types:['result','qty'],   survey_hint:'em_qty', qty_label:'Tested' },
+        { id:'em_condition',label:'Overall condition',                        types:['result','condition'] },
+        { id:'em_failures', label:'Failed units noted and logged',            types:['result','notes'] },
+      ]},
+      { id:'ext', title:'Fire Extinguishers', items:[
+        { id:'ext_co2',     label:'CO₂ extinguishers — condition & pressure', types:['result','qty'],   survey_hint:'ext_qty_co2', qty_label:'Checked' },
+        { id:'ext_water',   label:'Water extinguishers — condition & pressure',types:['result','qty'],  survey_hint:'ext_qty_water', qty_label:'Checked' },
+        { id:'ext_foam',    label:'Foam extinguishers — condition & pressure', types:['result','qty'],  survey_hint:'ext_qty_foam', qty_label:'Checked' },
+        { id:'ext_tags',    label:'All service tags in date',                  types:['result','notes'] },
+        { id:'ext_placement',label:'Correct placement and signage',           types:['result'] },
+      ]},
+      { id:'fd', title:'Fire Doors', items:[
+        { id:'fd_gaps',     label:'Door gaps within tolerance (≤3mm)',        types:['result','condition'], survey_hint:'fd_qty' },
+        { id:'fd_seals',    label:'Intumescent seals intact',                 types:['result'] },
+        { id:'fd_closers',  label:'Self-closers functioning on all doors',    types:['result','notes'] },
+        { id:'fd_signage',  label:'Fire door signage correct',                types:['result'] },
+      ]},
+      { id:'escape', title:'Escape Routes', items:[
+        { id:'esc_clear',   label:'All escape routes clear and unobstructed', types:['result'] },
+        { id:'esc_signage', label:'Emergency exit signage illuminated',       types:['result'] },
+        { id:'esc_condition',label:'Route condition acceptable',              types:['result','condition'] },
+      ]},
+    ]
+  },
+  {
+    id:'water', icon:'💧', title:'Water & Legionella',
+    desc:'Temperature monitoring, flushing, TMV checks and water hygiene',
+    blocks:[
+      { id:'temps', title:'Temperature Monitoring', items:[
+        { id:'cold_sentinel', label:'Cold water sentinel outlet temperature',  types:['result','temp'], temp_type:'cold', target:'<20°C' },
+        { id:'hot_sentinel',  label:'Hot water sentinel outlet temperature',   types:['result','temp'], temp_type:'hot',  target:'>50°C' },
+        { id:'cold_storage',  label:'Cold water storage temperature',          types:['result','temp'], temp_type:'cold', target:'<20°C' },
+        { id:'calorifier',    label:'Calorifier flow temperature',             types:['result','temp'], temp_type:'hot',  target:'>60°C' },
+      ]},
+      { id:'flushing', title:'Water Hygiene Flushing', items:[
+        { id:'flush_outlets', label:'Infrequently used outlets flushed (min 2 mins)', types:['result','qty','notes'], qty_label:'Flushed' },
+        { id:'shower_check',  label:'Showerhead condition checked',           types:['result','condition'], survey_hint:'showers' },
+        { id:'tmv_check',     label:'TMV temperature at blended outlet',      types:['result','temp'], temp_type:'tmv', target:'38-46°C' },
+      ]},
+      { id:'records', title:'Records & Documentation', items:[
+        { id:'log_updated',   label:'Temperature log updated and signed',     types:['result'] },
+        { id:'log_review',    label:'Previous readings reviewed',             types:['result','notes'] },
+      ]},
+    ]
+  },
+  {
+    id:'pat', icon:'⚡', title:'PAT Testing',
+    desc:'Rolling PAT schedule — portable appliance testing',
+    blocks:[
+      { id:'pat_batch', title:'This Month\'s PAT Batch', items:[
+        { id:'pat_tested',    label:'Appliances tested this visit',           types:['result','qty','notes'], qty_label:'Tested', survey_hint:'pat_monthly_batch' },
+        { id:'pat_passed',    label:'Appliances passed',                      types:['result','qty'], qty_label:'Passed' },
+        { id:'pat_failed',    label:'Failed appliances — removed from use',   types:['result','qty','notes'], qty_label:'Failed' },
+        { id:'pat_labels',    label:'Pass labels applied to all tested items',types:['result'] },
+        { id:'pat_cert',      label:'Test records updated',                   types:['result'] },
+      ]},
+    ]
+  },
+  {
+    id:'electrical', icon:'💡', title:'Electrical & Lighting',
+    desc:'Consumer unit condition, general lighting checks',
+    blocks:[
+      { id:'elec', title:'Electrical', items:[
+        { id:'cu_condition',  label:'Consumer unit — no visible damage or overheating', types:['result','condition'] },
+        { id:'cu_labelled',   label:'Circuit labels legible',                 types:['result'] },
+        { id:'rcd_test',      label:'RCD test button functional',             types:['result'] },
+      ]},
+      { id:'lighting', title:'Lighting', items:[
+        { id:'gen_lighting',  label:'General lighting operational',           types:['result','condition'] },
+        { id:'failed_lamps',  label:'Failed luminaires noted and logged',     types:['result','qty','notes'], qty_label:'Failed' },
+        { id:'ext_lighting',  label:'External lighting operational',          types:['result','condition'] },
+      ]},
+    ]
+  },
+  {
+    id:'facilities', icon:'🏗️', title:'Facilities & General',
+    desc:'Building fabric, welfare, signage and general safety walk-through',
+    blocks:[
+      { id:'general', title:'General Walk-Through', items:[
+        { id:'floors_clear',  label:'Floor surfaces — no trip or slip hazards', types:['result','notes'] },
+        { id:'storage_safe',  label:'Storage areas safe and accessible',      types:['result'] },
+        { id:'coshh_stored',  label:'COSHH substances correctly stored',      types:['result'] },
+        { id:'first_aid',     label:'First aid kit stocked and accessible',   types:['result','notes'] },
+        { id:'welfare',       label:'Welfare facilities clean and functional',types:['result','condition'] },
+        { id:'waste',         label:'Waste management adequate',              types:['result'] },
+      ]},
+      { id:'signage', title:'Safety Signage', items:[
+        { id:'mandatory_signs',label:'Mandatory signage in place',            types:['result'] },
+        { id:'warning_signs', label:'Warning signs appropriate for hazards',  types:['result'] },
+        { id:'first_aid_sign',label:'First aid signage visible',              types:['result'] },
+      ]},
+      { id:'repairs', title:'Minor Repairs This Visit', items:[
+        { id:'repairs_done',  label:'Minor repairs completed during visit',   types:['result','notes'] },
+        { id:'repairs_refer', label:'Items referred for specialist attention', types:['result','notes'] },
+      ]},
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let state = {
+  clients: [],
+  surveys: {},
+  currentClient: null,
+  currentVisit: {},
+  currentSection: 0,
+  visitDate: new Date().toISOString(),
+  visitId: null,
+};
+
+// ═══════════════════════════════════════════════
+// INDEXEDDB
+// ═══════════════════════════════════════════════
+let db = null;
+function initDB() {
+  return new Promise((res,rej) => {
+    const req = indexedDB.open('HCCVisit', 1);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('visits'))
+        d.createObjectStore('visits', { keyPath:'id' });
+    };
+    req.onsuccess = e => { db = e.target.result; res(); };
+    req.onerror   = e => rej(e.target.error);
+  });
+}
+function dbPut(data) {
+  return new Promise((res,rej) => {
+    const tx = db.transaction('visits','readwrite');
+    tx.objectStore('visits').put(data).onsuccess = e => res(e.target.result);
+    tx.onerror = e => rej(e.target.error);
+  });
+}
+function dbGetByClient(clientId) {
+  return new Promise((res,rej) => {
+    const tx  = db.transaction('visits','readonly');
+    const req = tx.objectStore('visits').getAll();
+    req.onsuccess = e => res((e.target.result || []).filter(v => v.clientId === clientId).sort((a,b) => b.date.localeCompare(a.date)));
+    req.onerror   = e => rej(e.target.error);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════════════════
+const SB = {
+  url:null, key:null, token:null, ready:false,
+  init() {
+    this.url   = localStorage.getItem('sb_url');
+    this.key   = localStorage.getItem('sb_key');
+    const tok  = localStorage.getItem('sb_token');
+    const exp  = localStorage.getItem('sb_token_expiry');
+    if (tok && exp && Date.now() < parseInt(exp)) {
+      this.token = tok; this.ready = true; setSyncStatus('synced','Synced');
+    } else if (this.url && this.key) {
+      const email = localStorage.getItem('sb_email');
+      const pass  = localStorage.getItem('sb_pass_enc');
+      if (email && pass) this.login(email, atob(pass)).catch(()=>{});
+    } else { setSyncStatus('offline','Not configured'); }
+  },
+  async login(email, password) {
+    if (!this.url||!this.key||!email||!password) return false;
+    setSyncStatus('syncing','Connecting...');
+    try {
+      const r = await fetch(`${this.url}/auth/v1/token?grant_type=password`,{
+        method:'POST', headers:{'Content-Type':'application/json','apikey':this.key},
+        body: JSON.stringify({email, password})
+      });
+      const d = await r.json();
+      if (d.access_token) {
+        this.token = d.access_token; this.ready = true;
+        localStorage.setItem('sb_token', this.token);
+        localStorage.setItem('sb_token_expiry', String(Date.now()+3500000));
+        setSyncStatus('synced','Connected');
+        return true;
+      }
+      setSyncStatus('error','Auth failed'); return false;
+    } catch { setSyncStatus('error','No signal'); return false; }
+  },
+  hdrs() {
+    return {'Content-Type':'application/json','apikey':this.key,'Authorization':`Bearer ${this.token}`,'Prefer':'resolution=merge-duplicates,return=minimal'};
+  },
+  async upsert(table, data) {
+    if (!this.ready||!navigator.onLine) { setSyncStatus('offline','Queued'); return; }
+    setSyncStatus('syncing','Syncing...');
+    try {
+      const r = await fetch(`${this.url}/rest/v1/${table}`,{method:'POST',headers:this.hdrs(),body:JSON.stringify(data)});
+      if (r.ok||r.status===201) { setSyncStatus('synced','Synced'); return true; }
+      setSyncStatus('error','Sync error'); return false;
+    } catch { setSyncStatus('offline','No signal'); return false; }
+  },
+  async fetchClients() {
+    if (!this.ready||!navigator.onLine) return [];
+    try {
+      const r = await fetch(`${this.url}/rest/v1/clients?select=*&order=name.asc`,{headers:this.hdrs()});
+      return r.ok ? await r.json() : [];
+    } catch { return []; }
+  },
+  async fetchSurvey(clientId) {
+    if (!this.ready||!navigator.onLine) return null;
+    try {
+      const r = await fetch(`${this.url}/rest/v1/surveys?client_id=eq.${clientId}&select=*`,{headers:this.hdrs()});
+      if (r.ok) { const rows = await r.json(); return rows[0]||null; }
+    } catch {} return null;
+  }
+};
+
+function setSyncStatus(s,l) {
+  const dot=document.getElementById('syncDot');
+  const lbl=document.getElementById('syncLabel');
+  if(dot){dot.className=`sync-dot ${s}`;}
+  if(lbl){lbl.textContent=l;}
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+async function init() {
+  await initDB();
+  setupOffline();
+  setTimeout(()=>SB.init(),400);
+  setTimeout(loadClients, 600);
+}
+
+function setupOffline() {
+  const b = document.getElementById('offlineBanner');
+  const u = ()=>b.classList.toggle('show',!navigator.onLine);
+  window.addEventListener('online',u);
+  window.addEventListener('offline',u);
+  u();
+}
+
+async function loadClients() {
+  if (SB.ready && navigator.onLine) {
+    const remote = await SB.fetchClients();
+    if (remote.length) {
+      state.clients = remote.map(c => ({
+        id:c.id, name:c.name, type:c.type,
+        address:c.address, phone:c.phone, email:c.email,
+        plan:c.plan, hasSurvey:c.has_survey
+      }));
+      renderClientGrid();
+      return;
+    }
+  }
+  // Fallback — try local visits to derive clients
+  renderClientGrid();
+}
+
+// ═══════════════════════════════════════════════
+// CLIENT GRID
+// ═══════════════════════════════════════════════
+function renderClientGrid() {
+  const grid = document.getElementById('clientGrid');
+  if (!state.clients.length) {
+    grid.innerHTML = `<div style="color:var(--mg);font-size:13px;padding:8px;grid-column:1/-1">
+      No clients found. Make sure you're connected and have added clients in the Survey app.
+      <br><br><button class="topbar-btn gold" onclick="loadClients()" style="margin-top:8px">Retry</button>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = state.clients.map(c => `
+    <div class="client-card ${c.hasSurvey?'':'no-survey'}" onclick="${c.hasSurvey?`startVisit('${c.id}')`:'void(0)'}">
+      <div class="cc-name">${esc(c.name)}</div>
+      <div class="cc-type">${esc(c.type||'Site')}</div>
+      ${c.address?`<div class="cc-address">${esc(c.address)}</div>`:''}
+      <span class="cc-badge ${c.hasSurvey?'ready':'no-survey'}">
+        ${c.hasSurvey?'✓ Ready for visit':'Survey needed first'}
+      </span>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════
+// START VISIT
+// ═══════════════════════════════════════════════
+async function startVisit(clientId) {
+  const client = state.clients.find(c=>c.id===clientId);
+  if (!client) return;
+  state.currentClient = client;
+  state.currentVisit  = {};
+  state.visitDate     = new Date().toISOString();
+  state.visitId       = `v_${Date.now()}`;
+  state.currentSection = 0;
+
+  // Load survey data for pre-population hints
+  let survey = state.surveys[clientId];
+  if (!survey) {
+    const remote = await SB.fetchSurvey(clientId);
+    if (remote) { state.surveys[clientId] = remote.data; survey = remote.data; }
+  }
+
+  // Update UI
+  document.getElementById('sidebarName').textContent = client.name;
+  document.getElementById('sidebarMeta').textContent =
+    `${client.type||'Site'}\n${formatDate(state.visitDate)}`;
+  document.getElementById('topbarStatus').textContent = client.name;
+  document.getElementById('saveBtn').style.display = '';
+  document.getElementById('historyBtn').style.display = '';
+
+  buildSidebar();
+  renderSection(0);
+  showView('checklist');
+  closeSidebarMob();
+}
+
+// ═══════════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════════
+function buildSidebar() {
+  const c = document.getElementById('sidebarSections');
+  c.innerHTML = CHECKLIST.map((sec,i)=>`
+    <button class="sec-btn" id="sb-sec-${i}" onclick="renderSection(${i})">
+      <span class="sec-dot"></span>
+      ${sec.icon} ${sec.title}
+    </button>
+  `).join('') + `
+    <button class="sec-btn" onclick="showSummary()" style="margin-top:8px;border-top:1px solid rgba(255,255,255,.08)">
+      <span class="sec-dot"></span>
+      📋 Review & Report
+    </button>
+  `;
+}
+
+function updateSidebarProgress() {
+  let total=0, done=0, fails=0, actions=0;
+  CHECKLIST.forEach((sec,i)=>{
+    let sDone=0,sTotal=0,sFail=0,sAction=0;
+    sec.blocks.forEach(b=>b.items.forEach(item=>{
+      sTotal++; total++;
+      const r = getVal(sec.id,b.id,item.id,'result');
+      if(r){sDone++;done++;if(r==='fail')sFail++;if(r==='action')sAction++;}
+    }));
+    fails+=sFail; actions+=sAction;
+    const btn=document.getElementById(`sb-sec-${i}`);
+    if(btn){
+      btn.classList.remove('complete','has-fails','has-actions','active');
+      if(i===state.currentSection)btn.classList.add('active');
+      else if(sFail>0)btn.classList.add('has-fails');
+      else if(sAction>0)btn.classList.add('has-actions');
+      else if(sDone>0&&sDone===sTotal)btn.classList.add('complete');
+      btn.querySelector('.sec-dot').style.background =
+        i===state.currentSection?'var(--gold)':
+        sFail>0?'var(--red)':sAction>0?'var(--amber)':
+        (sDone>0&&sDone===sTotal)?'var(--green)':'rgba(255,255,255,.2)';
+    }
+  });
+  const pct=total?Math.round(done/total*100):0;
+  const fill=document.getElementById('progressFill');
+  fill.style.width=pct+'%';
+  fill.className='progress-fill'+(fails===0&&done===total&&total>0?' all-pass':'');
+  document.getElementById('progressText').textContent=`${done} of ${total} checked`;
+  document.getElementById('progressPct').textContent=pct+'%';
+}
+
+// ═══════════════════════════════════════════════
+// SECTION RENDER
+// ═══════════════════════════════════════════════
+function renderSection(idx) {
+  state.currentSection = idx;
+  const sec = CHECKLIST[idx];
+  const survey = state.surveys[state.currentClient?.id] || {};
+
+  document.getElementById('sectionIcon').textContent  = sec.icon;
+  document.getElementById('sectionTitle').textContent = sec.title;
+  document.getElementById('sectionDesc').textContent  = sec.desc;
+
+  // Section nav
+  const nav = document.getElementById('sectionNav');
+  nav.innerHTML = CHECKLIST.map((s,i)=>{
+    let cls='sec-nav-btn';
+    if(i===idx) cls+=' current';
+    else {
+      let hasFail=false,hasAction=false,hasDone=false,allDone=true;
+      let itemCount=0;
+      s.blocks.forEach(b=>b.items.forEach(item=>{
+        itemCount++;
+        const r=getVal(s.id,b.id,item.id,'result');
+        if(r==='fail')hasFail=true;
+        if(r==='action')hasAction=true;
+        if(r)hasDone=true; else allDone=false;
+      }));
+      if(hasFail) cls+=' done-fail';
+      else if(hasAction) cls+=' done-action';
+      else if(hasDone&&allDone) cls+=' done-pass';
+    }
+    return `<button class="${cls}" onclick="renderSection(${i})">${s.icon} ${s.title}</button>`;
+  }).join('') + `<button class="sec-nav-btn" onclick="showSummary()">📋 Review</button>`;
+
+  // Stats
+  let pass=0,fail=0,action=0,pending=0;
+  sec.blocks.forEach(b=>b.items.forEach(item=>{
+    const r=getVal(sec.id,b.id,item.id,'result');
+    if(!r)pending++;
+    else if(r==='pass')pass++;
+    else if(r==='fail')fail++;
+    else if(r==='action')action++;
+  }));
+  document.getElementById('sectionStats').innerHTML = `
+    ${pass?`<span class="stat-pill pass">✓ ${pass} Pass</span>`:''}
+    ${fail?`<span class="stat-pill fail">✗ ${fail} Fail</span>`:''}
+    ${action?`<span class="stat-pill action">⚠ ${action} Action</span>`:''}
+    ${pending?`<span class="stat-pill pending">○ ${pending} Pending</span>`:''}
+  `;
+
+  // Body
+  const body = document.getElementById('sectionBody');
+  body.innerHTML = '';
+  let itemNum = 1;
+  sec.blocks.forEach(block=>{
+    const blockEl = document.createElement('div');
+    blockEl.className = 'check-block';
+    blockEl.innerHTML = `<div class="check-block-head"><div class="check-block-title">${block.title}</div></div>`;
+    block.items.forEach(item=>{
+      blockEl.appendChild(renderItem(sec, block, item, survey, itemNum++));
+    });
+    body.appendChild(blockEl);
+  });
+
+  document.getElementById('contentArea').scrollTop = 0;
+  updateSidebarProgress();
+}
+
+function renderItem(sec, block, item, survey, num) {
+  const el = document.createElement('div');
+  el.className = 'check-item';
+  el.id = `item-${sec.id}-${block.id}-${item.id}`;
+
+  // Survey hint value
+  let surveyHint = '';
+  if (item.survey_hint && survey) {
+    // Search survey data for hint
+    const keys = Object.keys(survey).filter(k=>k.includes(item.survey_hint));
+    if (keys.length) surveyHint = survey[keys[0]];
+  }
+
+  let html = `<div class="check-item-top">
+    <div class="check-ref">${String(num).padStart(2,'0')}</div>
+    <div class="check-label-wrap">
+      <div class="check-label">${item.label}</div>
+      ${surveyHint?`<div class="check-survey-val">Survey: ${esc(String(surveyHint))}</div>`:''}
+    </div>
+  </div>`;
+
+  // Result buttons
+  if (item.types.includes('result')) {
+    const cur = getVal(sec.id, block.id, item.id, 'result');
+    html += `<div class="result-row">
+      ${['pass','fail','action','na'].map(r=>`
+        <button class="result-btn ${cur===r?`sel-${r}`:''}"
+          onclick="setResult(this,'${sec.id}','${block.id}','${item.id}','${r}')">
+          ${r==='pass'?'✓ Pass':r==='fail'?'✗ Fail':r==='action'?'⚠ Action':'— N/A'}
+        </button>
+      `).join('')}
+    </div>`;
+  }
+
+  // Condition
+  if (item.types.includes('condition')) {
+    const cur = getVal(sec.id, block.id, item.id, 'condition');
+    html += `<div class="cond-row">
+      ${['Good','Fair','Poor','N/A'].map(c=>`
+        <button class="cond-btn ${cur===c?`sel-${c.toLowerCase().replace('/','')}`:''}
+          " onclick="setCondition(this,'${sec.id}','${block.id}','${item.id}','${c}')">
+          ${c}
+        </button>
+      `).join('')}
+    </div>`;
+  }
+
+  // Temperature
+  if (item.types.includes('temp')) {
+    const cur = getVal(sec.id, block.id, item.id, 'temp') || '';
+    const tempType = item.temp_type || 'hot';
+    html += `<div class="temp-row">
+      <input class="temp-input" type="number" step="0.1" value="${esc(String(cur))}"
+        placeholder="0.0"
+        onchange="setTemp(this,'${sec.id}','${block.id}','${item.id}','${tempType}')"
+        oninput="updateTempIndicator(this,'${tempType}','${item.target||''}')"/>
+      <span class="temp-unit">°C</span>
+      <span class="temp-indicator" id="temp-ind-${sec.id}-${block.id}-${item.id}">
+        ${cur?getTempStatus(cur,tempType,item.target||''):'Enter reading'}
+      </span>
+      <span style="font-size:11px;color:var(--mg)">${item.target||''}</span>
+    </div>`;
+  }
+
+  // Quantity
+  if (item.types.includes('qty')) {
+    const cur = getVal(sec.id, block.id, item.id, 'qty') || '';
+    const hint = surveyHint ? ` (Survey: ${surveyHint})` : '';
+    html += `<div class="qty-row">
+      <span class="qty-label">${item.qty_label||'Count'}${hint}:</span>
+      <input class="qty-input" type="number" min="0" value="${esc(String(cur))}"
+        onchange="setQty('${sec.id}','${block.id}','${item.id}',this.value)"/>
+    </div>`;
+  }
+
+  // Notes
+  if (item.types.includes('notes')) {
+    const cur = getVal(sec.id, block.id, item.id, 'notes') || '';
+    html += `<div class="notes-row">
+      <textarea class="notes-input" rows="1" placeholder="Notes..."
+        onchange="setNotes('${sec.id}','${block.id}','${item.id}',this.value)"
+        oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
+      >${esc(cur)}</textarea>
+    </div>`;
+  }
+
+  el.innerHTML = html;
+  return el;
+}
+
+// ═══════════════════════════════════════════════
+// VALUE SETTERS
+// ═══════════════════════════════════════════════
+function getVal(secId, blockId, itemId, type) {
+  return state.currentVisit[`${secId}_${blockId}_${itemId}_${type}`] ?? null;
+}
+function setVal(secId, blockId, itemId, type, val) {
+  state.currentVisit[`${secId}_${blockId}_${itemId}_${type}`] = val;
+  updateSidebarProgress();
+  autoSave();
+}
+
+function setResult(btn, secId, blockId, itemId, result) {
+  const row = btn.parentElement;
+  row.querySelectorAll('.result-btn').forEach(b=>{
+    b.className = 'result-btn';
+  });
+  btn.classList.add(`sel-${result}`);
+  setVal(secId, blockId, itemId, 'result', result);
+  // Update section stats
+  renderSectionStats();
+}
+
+function setCondition(btn, secId, blockId, itemId, cond) {
+  const row = btn.parentElement;
+  row.querySelectorAll('.cond-btn').forEach(b=>b.className='cond-btn');
+  const cls = cond==='Good'?'sel-good':cond==='Fair'?'sel-fair':cond==='Poor'?'sel-poor':'sel-na';
+  btn.classList.add(cls);
+  setVal(secId, blockId, itemId, 'condition', cond);
+}
+
+function setTemp(input, secId, blockId, itemId, tempType) {
+  const val = parseFloat(input.value);
+  setVal(secId, blockId, itemId, 'temp', isNaN(val)?null:val);
+  updateTempIndicator(input, tempType, '');
+}
+
+function updateTempIndicator(input, tempType, target) {
+  const val = parseFloat(input.value);
+  // Find indicator by traversing DOM
+  const row = input.parentElement;
+  const ind = row.querySelector('.temp-indicator');
+  if (!ind) return;
+  if (isNaN(val)) { ind.textContent='Enter reading'; ind.className='temp-indicator'; return; }
+  const status = getTempStatus(val, tempType, target);
+  const ok = !status.includes('⚠');
+  ind.textContent = status;
+  ind.className = `temp-indicator ${ok?'ok':'warn'}`;
+}
+
+function getTempStatus(val, tempType, target) {
+  const v = parseFloat(val);
+  if (isNaN(v)) return 'Enter reading';
+  if (tempType==='cold') return v<20?`✓ ${v}°C OK`:`⚠ ${v}°C HIGH`;
+  if (tempType==='hot')  return v>50?`✓ ${v}°C OK`:`⚠ ${v}°C LOW`;
+  if (tempType==='tmv')  return (v>=38&&v<=46)?`✓ ${v}°C OK`:`⚠ ${v}°C CHECK`;
+  return `${v}°C`;
+}
+
+function setQty(secId, blockId, itemId, val) {
+  setVal(secId, blockId, itemId, 'qty', val);
+}
+function setNotes(secId, blockId, itemId, val) {
+  setVal(secId, blockId, itemId, 'notes', val);
+}
+
+function renderSectionStats() {
+  const sec = CHECKLIST[state.currentSection];
+  let pass=0,fail=0,action=0,pending=0;
+  sec.blocks.forEach(b=>b.items.forEach(item=>{
+    const r=getVal(sec.id,b.id,item.id,'result');
+    if(!r)pending++;else if(r==='pass')pass++;else if(r==='fail')fail++;else if(r==='action')action++;
+  }));
+  document.getElementById('sectionStats').innerHTML=`
+    ${pass?`<span class="stat-pill pass">✓ ${pass} Pass</span>`:''}
+    ${fail?`<span class="stat-pill fail">✗ ${fail} Fail</span>`:''}
+    ${action?`<span class="stat-pill action">⚠ ${action} Action</span>`:''}
+    ${pending?`<span class="stat-pill pending">○ ${pending} Pending</span>`:''}
+  `;
+}
+
+// ═══════════════════════════════════════════════
+// AUTOSAVE
+// ═══════════════════════════════════════════════
+let saveTimer = null;
+function autoSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveVisit, 2000);
+}
+
+async function saveVisit() {
+  if (!state.currentClient || !state.visitId) return;
+  const visitData = {
+    id:       state.visitId,
+    clientId: state.currentClient.id,
+    date:     state.visitDate,
+    data:     state.currentVisit,
+    updated:  new Date().toISOString(),
+  };
+  await dbPut(visitData);
+  // Sync to Supabase
+  SB.upsert('visits', {
+    id:        state.visitId,
+    client_id: state.currentClient.id,
+    date:      state.visitDate,
+    data:      state.currentVisit,
+    updated:   new Date().toISOString(),
+  });
+  toast('Saved','success');
+}
+
+// ═══════════════════════════════════════════════
+// SUMMARY VIEW
+// ═══════════════════════════════════════════════
+function showSummary() {
+  const c = state.currentClient;
+  let totalPass=0,totalFail=0,totalAction=0,totalPending=0,totalItems=0;
+  CHECKLIST.forEach(sec=>sec.blocks.forEach(b=>b.items.forEach(item=>{
+    totalItems++;
+    const r=getVal(sec.id,b.id,item.id,'result');
+    if(!r)totalPending++;else if(r==='pass')totalPass++;else if(r==='fail')totalFail++;else if(r==='action')totalAction++;
+  })));
+
+  let html = `
+    <div class="summary-header">
+      <div class="summary-title">Visit Summary — ${esc(c.name)}</div>
+      <div class="summary-stats">
+        <div class="summary-stat">
+          <div class="summary-stat-num" style="color:var(--green)">${totalPass}</div>
+          <div class="summary-stat-label">Pass</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-num" style="color:var(--red)">${totalFail}</div>
+          <div class="summary-stat-label">Fail</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-num" style="color:var(--amber)">${totalAction}</div>
+          <div class="summary-stat-label">Action</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-num" style="color:var(--mg)">${totalPending}</div>
+          <div class="summary-stat-label">Pending</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-num" style="color:var(--gold)">${totalItems}</div>
+          <div class="summary-stat-label">Total</div>
+        </div>
+      </div>
+    </div>
+    <div class="summary-actions">
+      <button class="topbar-btn" onclick="renderSection(0);showView('checklist')">← Back to Checklist</button>
+      <button class="topbar-btn gold" onclick="generateReport()">Generate Report →</button>
+    </div>
+  `;
+
+  CHECKLIST.forEach((sec,si)=>{
+    let secPass=0,secFail=0,secAction=0,secItems=0;
+    let rows='';
+    sec.blocks.forEach(b=>b.items.forEach((item,ii)=>{
+      secItems++;
+      const r    = getVal(sec.id,b.id,item.id,'result');
+      const cond = getVal(sec.id,b.id,item.id,'condition');
+      const temp = getVal(sec.id,b.id,item.id,'temp');
+      const qty  = getVal(sec.id,b.id,item.id,'qty');
+      const notes= getVal(sec.id,b.id,item.id,'notes');
+      if(!r)secPending++;
+      else if(r==='pass')secPass++;
+      else if(r==='fail')secFail++;
+      else if(r==='action')secAction++;
+      const badge = r
+        ?`<span class="result-badge ${r}">${r==='pass'?'✓ Pass':r==='fail'?'✗ Fail':r==='action'?'⚠ Action':'— N/A'}</span>`
+        :`<span class="result-badge pending">Pending</span>`;
+      let details='';
+      if(cond) details+=`<span style="font-size:11px;color:var(--mg)"> · ${cond}</span>`;
+      if(temp!==null&&temp!==undefined&&temp!=='') details+=`<span style="font-size:11px;color:var(--gold)"> · ${temp}°C</span>`;
+      if(qty)  details+=`<span style="font-size:11px;color:var(--mg)"> · Qty: ${qty}</span>`;
+      if(notes)details+=`<div style="font-size:11px;color:var(--mg);margin-top:3px;font-style:italic">${esc(notes)}</div>`;
+      rows+=`<tr>
+        <td style="font-size:11px;color:var(--mg);width:80px">${sec.icon} ${b.title}</td>
+        <td>${item.label}${details}</td>
+        <td style="white-space:nowrap">${badge}</td>
+      </tr>`;
+    }));
+    html+=`
+      <div class="summary-section">
+        <div class="summary-sec-head">
+          <div class="summary-sec-title">${sec.icon} ${sec.title}</div>
+          <div style="display:flex;gap:6px">
+            ${secPass?`<span class="result-badge pass">${secPass}</span>`:''}
+            ${secFail?`<span class="result-badge fail">${secFail}</span>`:''}
+            ${secAction?`<span class="result-badge action">${secAction}</span>`:''}
+          </div>
+        </div>
+        <table class="summary-table">
+          <tr><th>Section</th><th>Check</th><th>Result</th></tr>
+          ${rows}
+        </table>
+      </div>
+    `;
+  });
+
+  html+=`<div class="summary-actions">
+    <button class="topbar-btn" onclick="renderSection(0);showView('checklist')">← Back</button>
+    <button class="topbar-btn gold" onclick="generateReport()">Generate Report →</button>
+  </div>`;
+
+  document.getElementById('summaryContent').innerHTML = html;
+  showView('summary');
+  document.getElementById('contentArea').scrollTop = 0;
+}
+
+// ═══════════════════════════════════════════════
+// REPORT GENERATION
+// ═══════════════════════════════════════════════
+function generateReport() {
+  const c = state.currentClient;
+  const date = formatDate(state.visitDate);
+  let pass=0,fail=0,action=0;
+  CHECKLIST.forEach(sec=>sec.blocks.forEach(b=>b.items.forEach(item=>{
+    const r=getVal(sec.id,b.id,item.id,'result');
+    if(r==='pass')pass++;else if(r==='fail')fail++;else if(r==='action')action++;
+  })));
+  const overallStatus = fail>0?'ITEMS REQUIRE ATTENTION':action>0?'ACTIONS REQUIRED':'ALL CHECKS PASSED';
+  const statusColor   = fail>0?'var(--red)':action>0?'var(--amber)':'var(--green)';
+
+  let html = `
+    <div class="report-actions">
+      <button class="topbar-btn" onclick="showSummary()">← Back to Summary</button>
+      <button class="topbar-btn gold" onclick="window.print()">🖨 Print / PDF</button>
+      <button class="topbar-btn" onclick="emailReport()">✉ Email</button>
+    </div>
+    <div class="report-header">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <svg width="28" height="28" viewBox="0 0 72 72" fill="none">
+          <path d="M36 4L8 16V38C8 53.2 20.4 65.4 36 68C51.6 65.4 64 53.2 64 38V16L36 4Z" fill="rgba(255,255,255,.06)"/>
+          <path d="M36 10L13 20.5V38C13 50.2 23.2 60.8 36 63.4C48.8 60.8 59 50.2 59 38V20.5L36 10Z" stroke="#C8922A" stroke-width="1.5" fill="none"/>
+          <path d="M24 37L31.5 45L48 28" stroke="#C8922A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <div class="report-co">Heyford <span>Compliance</span> Co.</div>
+          <div class="report-type">Monthly Compliance Visit Report</div>
+        </div>
+      </div>
+      <div class="report-fields">
+        <div class="rf"><div class="rf-label">Client</div><div class="rf-value">${esc(c.name)}</div></div>
+        <div class="rf"><div class="rf-label">Visit Date</div><div class="rf-value">${date}</div></div>
+        <div class="rf"><div class="rf-label">Technician</div><div class="rf-value">James Gilbert</div></div>
+        <div class="rf"><div class="rf-label">Report Ref</div><div class="rf-value">${state.visitId}</div></div>
+      </div>
+      <div style="margin-top:14px;padding:10px 16px;border-radius:2px;background:rgba(255,255,255,.06);border-left:4px solid ${statusColor}">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:${statusColor}">
+          Overall Status: ${overallStatus}
+        </div>
+        <div style="font-size:11px;color:var(--mg);margin-top:4px">
+          ${pass} passed · ${fail} failed · ${action} actions required
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Action items first if any
+  const actionItems = [];
+  CHECKLIST.forEach(sec=>sec.blocks.forEach(b=>b.items.forEach(item=>{
+    const r=getVal(sec.id,b.id,item.id,'result');
+    if(r==='fail'||r==='action'){
+      actionItems.push({
+        section:sec.title, label:item.label, result:r,
+        notes:getVal(sec.id,b.id,item.id,'notes')||''
+      });
+    }
+  })));
+  if(actionItems.length){
+    html+=`<div class="report-section">
+      <div class="report-sec-head"><div class="report-sec-title">⚠ Actions & Failures</div></div>
+      <table class="report-table">
+        <tr><th>Section</th><th>Item</th><th>Result</th><th>Notes</th></tr>
+        ${actionItems.map(a=>`<tr>
+          <td>${esc(a.section)}</td>
+          <td>${esc(a.label)}</td>
+          <td><span class="result-badge ${a.result}">${a.result==='fail'?'✗ FAIL':'⚠ ACTION'}</span></td>
+          <td>${esc(a.notes)||'—'}</td>
+        </tr>`).join('')}
+      </table>
+    </div>`;
+  }
+
+  // Full section detail
+  CHECKLIST.forEach(sec=>{
+    let rows='';
+    sec.blocks.forEach(b=>b.items.forEach(item=>{
+      const r    =getVal(sec.id,b.id,item.id,'result');
+      const cond =getVal(sec.id,b.id,item.id,'condition');
+      const temp =getVal(sec.id,b.id,item.id,'temp');
+      const qty  =getVal(sec.id,b.id,item.id,'qty');
+      const notes=getVal(sec.id,b.id,item.id,'notes');
+      if(!r&&!cond&&!temp&&!qty&&!notes) return;
+      const badge=r?`<span class="result-badge ${r}">${r==='pass'?'✓ Pass':r==='fail'?'✗ Fail':r==='action'?'⚠ Action':'— N/A'}</span>`:'-';
+      let det='';
+      if(cond)det+=cond;
+      if(temp!==null&&temp!==undefined&&temp!=='')det+=(det?', ':'')+temp+'°C';
+      if(qty)det+=(det?', ':'')+'Qty: '+qty;
+      rows+=`<tr>
+        <td>${esc(item.label)}</td>
+        <td style="text-align:center">${badge}</td>
+        <td>${esc(det)||'—'}</td>
+        <td>${esc(notes)||'—'}</td>
+      </tr>`;
+    }));
+    if(!rows) return;
+    html+=`<div class="report-section">
+      <div class="report-sec-head"><div class="report-sec-title">${sec.icon} ${sec.title}</div></div>
+      <table class="report-table">
+        <tr><th>Check</th><th style="text-align:center">Result</th><th>Reading / Condition</th><th>Notes</th></tr>
+        ${rows}
+      </table>
+    </div>`;
+  });
+
+  html+=`
+    <div class="report-section">
+      <div class="report-sec-head"><div class="report-sec-title">Sign-Off</div></div>
+      <table class="report-table">
+        <tr><td style="width:50%"><strong>Technician:</strong> James Gilbert<br>Heyford Compliance Co.<br><br>Signature: _______________________<br><br>Date: ${date}</td>
+        <td><strong>Client acknowledgement:</strong><br><br><br>Signature: _______________________<br><br>Name / Date: _______________________</td></tr>
+      </table>
+    </div>
+    <div class="report-footer-band">
+      <span>Heyford Compliance Co. · heyfordcompliance.co.uk · 07930 057731</span>
+      <span>james&#64;heyfordcompliance.co.uk</span>
+    </div>
+    <div class="report-actions">
+      <button class="topbar-btn gold" onclick="window.print()">🖨 Print / PDF</button>
+      <button class="topbar-btn" onclick="emailReport()">✉ Email</button>
+    </div>
+  `;
+
+  document.getElementById('reportContent').innerHTML = html;
+  showView('report');
+  document.getElementById('contentArea').scrollTop = 0;
+}
+
+function emailReport() {
+  const c = state.currentClient;
+  const subject = encodeURIComponent(`Monthly Compliance Report — ${c.name} — ${formatDate(state.visitDate)}`);
+  const body = encodeURIComponent(
+    `Dear ${c.contact||c.name},\n\nPlease find attached your monthly compliance report for ${formatDate(state.visitDate)}.\n\n` +
+    `To receive the PDF: open this link on a desktop browser, go to the report view, and print/save as PDF.\n\n` +
+    `James Gilbert\nHeyford Compliance Co.\n07930 057731\nheyfordcompliance.co.uk`
+  );
+  window.location.href = `mailto:${c.email||''}?subject=${subject}&body=${body}`;
+}
+
+// ═══════════════════════════════════════════════
+// HISTORY
+// ═══════════════════════════════════════════════
+async function showHistory() {
+  if (!state.currentClient) return;
+  const visits = await dbGetByClient(state.currentClient.id);
+  document.getElementById('historyTitle').textContent = `Visit History — ${state.currentClient.name}`;
+  document.getElementById('historyClient').textContent =
+    `${visits.length} visit${visits.length!==1?'s':''} on record`;
+
+  if (!visits.length) {
+    document.getElementById('historyList').innerHTML =
+      '<div style="color:var(--mg);font-size:13px;padding:8px">No previous visits recorded yet.</div>';
+  } else {
+    document.getElementById('historyList').innerHTML = visits.map(v=>{
+      let pass=0,fail=0,action=0;
+      CHECKLIST.forEach(sec=>sec.blocks.forEach(b=>b.items.forEach(item=>{
+        const r=v.data?.[`${sec.id}_${b.id}_${item.id}_result`];
+        if(r==='pass')pass++;else if(r==='fail')fail++;else if(r==='action')action++;
+      })));
+      const cls=fail>0?'has-fails':action>0?'has-actions':pass>0?'all-pass':'';
+      return `<div class="visit-card ${cls}" onclick="loadVisit('${v.id}')">
+        <div>
+          <div class="visit-date">${formatDate(v.date)}</div>
+          <div class="visit-meta">Visit ID: ${v.id}</div>
+        </div>
+        <div class="visit-stats">
+          ${pass?`<span class="result-badge pass">${pass}</span>`:''}
+          ${fail?`<span class="result-badge fail">${fail}</span>`:''}
+          ${action?`<span class="result-badge action">${action}</span>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+  showView('history');
+}
+
+async function loadVisit(visitId) {
+  const visits = await dbGetByClient(state.currentClient.id);
+  const visit = visits.find(v=>v.id===visitId);
+  if (!visit) return;
+  state.currentVisit = visit.data || {};
+  state.visitDate    = visit.date;
+  state.visitId      = visit.id;
+  renderSection(0);
+  showView('checklist');
+  toast('Visit loaded','success');
+}
+
+// ═══════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════
+function showConfig() {
+  document.getElementById('cfg-url').value   = localStorage.getItem('sb_url')||'';
+  document.getElementById('cfg-key').value   = localStorage.getItem('sb_key')||'';
+  document.getElementById('cfg-email').value = localStorage.getItem('sb_email')||'';
+  document.getElementById('cfg-pass').value  = '';
+  showView('config');
+}
+async function saveConfig() {
+  const url   = document.getElementById('cfg-url').value.trim().replace(/\/$/,'');
+  const key   = document.getElementById('cfg-key').value.trim();
+  const email = document.getElementById('cfg-email').value.trim();
+  const pass  = document.getElementById('cfg-pass').value;
+  if(!url||!key||!email||!pass){toast('All fields required','error');return;}
+  localStorage.setItem('sb_url',url);
+  localStorage.setItem('sb_key',key);
+  localStorage.setItem('sb_email',email);
+  localStorage.setItem('sb_pass_enc',btoa(pass));
+  SB.url=url;SB.key=key;
+  const ok = await SB.login(email,pass);
+  if(ok){toast('Connected ✓','success');loadClients();showSelectClient();}
+  else toast('Connection failed — check credentials','error');
+}
+
+// ═══════════════════════════════════════════════
+// NAV UTILS
+// ═══════════════════════════════════════════════
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+}
+function showSelectClient(){
+  showView('select');
+  document.getElementById('topbarStatus').textContent='Select a client';
+  document.getElementById('saveBtn').style.display='none';
+  document.getElementById('historyBtn').style.display='none';
+  state.currentClient=null;
+  closeSidebarMob();
+}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
+function closeSidebarMob(){document.getElementById('sidebar').classList.remove('open');}
+function formatDate(iso){
+  try{return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});}
+  catch{return iso;}
+}
+function esc(s){
+  if(!s)return'';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function toast(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className=`toast ${type} show`;
+  setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey&&e.key==='ArrowRight'&&state.currentClient){
+    renderSection(Math.min(state.currentSection+1,CHECKLIST.length-1));
+  }
+  if(e.ctrlKey&&e.key==='ArrowLeft'&&state.currentClient){
+    renderSection(Math.max(state.currentSection-1,0));
+  }
+  if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveVisit();}
+});
+
+window.addEventListener('online',()=>{
+  const pass=localStorage.getItem('sb_pass_enc');
+  const email=localStorage.getItem('sb_email');
+  if(email&&pass&&SB.url&&SB.key)SB.login(email,atob(pass));
+});
+
+init();
+</script>
+</body>
+</html>
